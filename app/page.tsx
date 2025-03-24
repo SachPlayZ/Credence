@@ -1,29 +1,34 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
-import Navbar from "@/components/navbar"
-import { ArrowRight, BarChartIcon as ChartBar, Shield, Zap } from "lucide-react"
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import Navbar from "@/components/navbar";
+import {
+  ArrowRight,
+  BarChartIcon as ChartBar,
+  Shield,
+  Zap,
+} from "lucide-react";
 
 export default function Home() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const backgroundRef = useRef<HTMLDivElement>(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (backgroundRef.current) {
-        const { clientX, clientY } = e
-        const x = (clientX / window.innerWidth) * 100
-        const y = (clientY / window.innerHeight) * 100
-        setMousePosition({ x, y })
+        const { clientX, clientY } = e;
+        const x = (clientX / window.innerWidth) * 100;
+        const y = (clientY / window.innerHeight) * 100;
+        setMousePosition({ x, y });
       }
-    }
+    };
 
-    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove);
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -33,7 +38,7 @@ export default function Home() {
         staggerChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -44,7 +49,7 @@ export default function Home() {
         duration: 0.5,
       },
     },
-  }
+  };
 
   return (
     <main className="min-h-screen overflow-x-hidden">
@@ -65,12 +70,17 @@ export default function Home() {
         className="container mx-auto px-4 pt-24 pb-16"
       >
         {/* Hero Section */}
-        <motion.section variants={itemVariants} className="flex flex-col items-center text-center mb-24">
+        <motion.section
+          variants={itemVariants}
+          className="flex flex-col items-center text-center mb-24"
+        >
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="inline-block mb-6 px-4 py-1 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-500/30 text-orange-300"
           >
-            <span className="text-sm font-medium">AI-Powered Finance Management</span>
+            <span className="text-sm font-medium">
+              AI-Powered Finance Management
+            </span>
           </motion.div>
           <motion.h1
             variants={itemVariants}
@@ -79,13 +89,22 @@ export default function Home() {
             Smart Finance, <br />
             Smarter Decisions
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-xl text-gray-300 max-w-2xl mb-10">
-            Take control of your finances with AI-powered insights that help you save more, spend wisely, and build
-            wealth effortlessly.
+          <motion.p
+            variants={itemVariants}
+            className="text-xl text-gray-300 max-w-2xl mb-10"
+          >
+            Take control of your finances with AI-powered insights that help you
+            save more, spend wisely, and build wealth effortlessly.
           </motion.p>
-          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(255, 99, 71, 0.7)" }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 15px rgba(255, 99, 71, 0.7)",
+              }}
               className="px-8 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(255,99,71,0.5)]"
             >
               Get Started <ArrowRight size={18} />
@@ -106,38 +125,50 @@ export default function Home() {
               Powerful Features
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto">
-              Our AI-powered platform analyzes your spending habits and provides personalized recommendations.
+              Our AI-powered platform analyzes your spending habits and provides
+              personalized recommendations.
             </p>
           </motion.div>
 
-          <motion.div variants={containerVariants} className="grid md:grid-cols-3 gap-8">
+          <motion.div
+            variants={containerVariants}
+            className="grid md:grid-cols-3 gap-8"
+          >
             {[
               {
                 icon: <Zap className="w-10 h-10 text-orange-400" />,
                 title: "AI-Powered Insights",
-                description: "Get personalized financial insights based on your spending patterns and financial goals.",
+                description:
+                  "Get personalized financial insights based on your spending patterns and financial goals.",
               },
               {
                 icon: <Shield className="w-10 h-10 text-orange-400" />,
                 title: "Overspending Prevention",
-                description: "Receive real-time alerts when you're about to exceed your budget in any category.",
+                description:
+                  "Receive real-time alerts when you're about to exceed your budget in any category.",
               },
               {
                 icon: <ChartBar className="w-10 h-10 text-orange-400" />,
                 title: "Smart Analytics",
-                description: "Visualize your financial health with intuitive charts and predictive analytics.",
+                description:
+                  "Visualize your financial health with intuitive charts and predictive analytics.",
               },
             ].map((feature, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ y: -10, boxShadow: "0 0 20px rgba(255, 99, 71, 0.3)" }}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 0 20px rgba(255, 99, 71, 0.3)",
+                }}
                 className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 flex flex-col items-center text-center transition-all"
               >
                 <div className="mb-4 p-3 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
+                <h3 className="text-xl font-semibold mb-3 text-white">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-300">{feature.description}</p>
               </motion.div>
             ))}
@@ -152,7 +183,10 @@ export default function Home() {
             </h2>
           </motion.div>
 
-          <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-8">
+          <motion.div
+            variants={containerVariants}
+            className="grid md:grid-cols-2 gap-8"
+          >
             {[
               {
                 quote:
@@ -161,7 +195,8 @@ export default function Home() {
                 title: "Marketing Director",
               },
               {
-                quote: "I've saved over $3,000 in the last 6 months thanks to the overspending prevention feature.",
+                quote:
+                  "I've saved over $3,000 in the last 6 months thanks to the overspending prevention feature.",
                 name: "Michael Chen",
                 title: "Software Engineer",
               },
@@ -172,11 +207,15 @@ export default function Home() {
                 whileHover={{ scale: 1.03 }}
                 className="p-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 transition-all"
               >
-                <p className="text-gray-300 mb-6 italic">"{testimonial.quote}"</p>
+                <p className="text-gray-300 mb-6 italic">
+                  &quot;{testimonial.quote}&quot;
+                </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-500 to-red-500 mr-4"></div>
                   <div>
-                    <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                    <h4 className="font-semibold text-white">
+                      {testimonial.name}
+                    </h4>
                     <p className="text-gray-400 text-sm">{testimonial.title}</p>
                   </div>
                 </div>
@@ -191,12 +230,18 @@ export default function Home() {
             whileHover={{ scale: 1.02 }}
             className="p-10 rounded-3xl bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg border border-orange-500/30 text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to Transform Your Finances?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+              Ready to Transform Your Finances?
+            </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-              Join thousands of users who have already improved their financial health with our AI-powered platform.
+              Join thousands of users who have already improved their financial
+              health with our AI-powered platform.
             </p>
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(255, 99, 71, 0.7)" }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 20px rgba(255, 99, 71, 0.7)",
+              }}
               className="px-8 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium flex items-center justify-center gap-2 mx-auto shadow-[0_0_10px_rgba(255,99,71,0.5)]"
             >
               Get Started Today <ArrowRight size={18} />
@@ -224,6 +269,5 @@ export default function Home() {
         </motion.footer>
       </motion.div>
     </main>
-  )
+  );
 }
-
