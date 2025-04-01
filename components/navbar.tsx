@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,6 +75,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
+              onClick={() => router.push("/login")}
               className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
             >
               Login
@@ -82,6 +85,7 @@ export default function Navbar() {
                 scale: 1.05,
                 boxShadow: "0 0 15px rgba(255, 99, 71, 0.7)",
               }}
+              onClick={() => router.push("/signup")}
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium shadow-[0_0_10px_rgba(255,99,71,0.5)]"
             >
               Sign Up
@@ -124,10 +128,22 @@ export default function Navbar() {
                   </a>
                 ))}
                 <div className="flex flex-col space-y-3 pt-4 border-t border-white/10">
-                  <button className="px-4 py-2 text-gray-300 hover:text-white transition-colors text-left">
+                  <button
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-colors text-left"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      router.push("/login");
+                    }}
+                  >
                     Login
                   </button>
-                  <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium">
+                  <button
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-medium"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      router.push("/signup");
+                    }}
+                  >
                     Sign Up
                   </button>
                 </div>
