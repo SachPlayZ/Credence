@@ -30,7 +30,11 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (error) {
-      setError("An error occurred during login");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred during login"
+      );
     }
   };
 
