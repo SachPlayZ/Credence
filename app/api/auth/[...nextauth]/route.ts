@@ -46,6 +46,7 @@ const handler = NextAuth({
           id: user._id.toString(),
           email: user.email,
           name: user.name,
+          image: user.image,
         };
       },
     }),
@@ -57,9 +58,13 @@ const handler = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
+      }
+      if (trigger === "update" && session) {
+        // Handle session update
+        return { ...token, ...session };
       }
       return token;
     },
@@ -68,6 +73,33 @@ const handler = NextAuth({
         session.user.id = token.id;
       }
       return session;
+    },
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        const client = await clientPromise;
+        const db = client.db("credence");
+
+        // Check if user has completed onboarding
+        const dbUser = await db
+          .collection("users")
+          .findOne({ email: user.email });
+        if (!dbUser?.onboarding?.completedAt) {
+          // Redirect to onboarding if not completed
+          return "/onboarding";
+        }
+      }
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      // Handle onboarding redirect
+      if (url.startsWith("/onboarding")) {
+        return `${baseUrl}/onboarding`;
+      }
+      // Default to dashboard for other cases
+      if (url === baseUrl) {
+        return `${baseUrl}/dashboard`;
+      }
+      return url;
     },
   },
 });

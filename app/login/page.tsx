@@ -39,12 +39,48 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#191923]">
+    <div className="min-h-screen flex items-center justify-center bg-[#191923] relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute -inset-[10px] opacity-50"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(255, 99, 71, 0.1) 0%, transparent 50%)",
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute -inset-[10px] opacity-30"
+          style={{
+            background:
+              "radial-gradient(circle at 70% 30%, rgba(255, 140, 0, 0.1) 0%, transparent 50%)",
+          }}
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.5, 0.3, 0.5],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md p-8 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10"
+        className="w-full max-w-md p-8 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 relative z-10"
       >
         <h2 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
           Welcome Back

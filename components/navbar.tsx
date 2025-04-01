@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -98,6 +99,20 @@ export default function Navbar() {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="px-4 py-2 text-gray-300 hover:text-white transition-colors flex items-center gap-2"
                 >
+                  <div className="relative w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                    {session.user.image ? (
+                      <Image
+                        src={session.user.image}
+                        alt={session.user.name || "User"}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center text-white text-sm font-medium">
+                        {session.user.name?.charAt(0).toUpperCase() || "U"}
+                      </div>
+                    )}
+                  </div>
                   <span>Hi, {session.user.name?.split(" ")[0]}</span>
                   <ChevronDown
                     size={16}
