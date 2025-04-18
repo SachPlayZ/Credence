@@ -8,7 +8,7 @@ import { DollarSign, Briefcase, Target, ChevronRight } from "lucide-react";
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { update } = useSession();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     monthlyIncome: "",
