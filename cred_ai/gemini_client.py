@@ -30,6 +30,15 @@ Based on the data above, generate:
 4. Offer general financial health tips suitable to this scenario.
 5. All monetary values should be presented in Indian Rupees (₹).
 6. Include advice specific to the Indian market and economy when relevant.
+7. Use a friendly and encouraging tone.
+8. Output should be in json format, with the following keys:
+summary: A brief summary of the user's financial behavior.
+overspending_categories: A list of categories where overspending occurred, including the amount overspent.
+category: The name of the category.
+overspent_by: The amount overspent in Indian Rupees.
+actionable_advice: A list of specific advice to save or budget more efficiently.
+general_tips: General financial health tips suitable for the user's scenario.
+9. Ensure the JSON is well-structured and valid.
 """
 
     try:
