@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
-
+import Link from "next/link";
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,8 +47,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Features", href: "#features" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Testimonials", href: "#testimonials" },
+    { name: "Dashboard", href: "/pages/dashboard" },
+    { name: "Summary", href: "/pages/summary" },
     { name: "Blog", href: "#blog" },
   ];
 
@@ -69,12 +69,12 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
-            <a
-              href="#"
+            <Link
+              href="/"
               className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500"
             >
-              FinanceAI
-            </a>
+              Credence
+            </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
