@@ -21,6 +21,55 @@ import { Button } from "@/components/ui/button"; // Adjust the path based on you
 
 const words = ["smarter", "stronger", "simpler", "secure"];
 
+const FloatingParticles = () => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    // Set initial dimensions
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    // Update dimensions on window resize
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 -z-5 opacity-60">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-orange-500"
+          initial={{
+            x: Math.random() * dimensions.width,
+            y: Math.random() * dimensions.height,
+            opacity: Math.random() * 0.5 + 0.3,
+            scale: Math.random() * 2 + 0.5,
+          }}
+          animate={{
+            y: [null, "-20vh"],
+            opacity: [null, 0],
+          }}
+          transition={{
+            duration: Math.random() * 10 + 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
 
@@ -112,29 +161,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Floating particles */}
-      <div className="fixed inset-0 -z-5 opacity-60">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-orange-500"
-            initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
-              opacity: Math.random() * 0.5 + 0.3,
-              scale: Math.random() * 2 + 0.5,
-            }}
-            animate={{
-              y: [null, "-20vh"],
-              opacity: [null, 0],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 15,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
+      <FloatingParticles />
 
       {/* Grid overlay */}
       <div className="fixed inset-0 -z-5 bg-[url('/grid.svg')] bg-center opacity-10" />
