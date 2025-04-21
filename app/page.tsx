@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/navbar";
+import { FlipWords } from "@/components/ui/flip-words";
 import {
   ArrowRight,
   BarChartIcon as ChartBar,
@@ -12,17 +13,18 @@ import {
   TrendingUp,
   AlertCircle,
   Check,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { Button } from "@/components/ui/button"; // Adjust the path based on your project structure
 
+const words = ["smarter", "stronger", "simpler", "secure"];
+
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
 
   const [loadingProgress, setLoadingProgress] = useState(0);
-
 
   // Simulated loading progress
   useEffect(() => {
@@ -31,8 +33,6 @@ export default function Home() {
     }, 500);
     return () => clearTimeout(timer);
   }, []);
-
-  
 
   // Scroll parallax effect
   useEffect(() => {
@@ -45,7 +45,6 @@ export default function Home() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,10 +70,10 @@ export default function Home() {
 
   const fadeIn = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { duration: 0.8 }
-    }
+      transition: { duration: 0.8 },
+    },
   };
 
   const timelineItems = [
@@ -89,12 +88,12 @@ export default function Home() {
       {/* Loading progress */}
       <AnimatePresence>
         {loadingProgress < 100 && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, transition: { duration: 0.5, delay: 0.2 } }}
             className="fixed inset-0 z-50 bg-gray-900 flex flex-col items-center justify-center"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 1.2, opacity: 0 }}
@@ -111,8 +110,6 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
-
-    
 
       {/* Floating particles */}
       <div className="fixed inset-0 -z-5 opacity-60">
@@ -163,28 +160,30 @@ export default function Home() {
             className="inline-block mb-6 px-6 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm border border-orange-500/30 text-orange-300"
           >
             <span className="text-sm font-medium flex items-center gap-2">
-              <Star className="w-4 h-4" fill="currentColor" /> AI-Powered Finance Management
+              <Star className="w-4 h-4" fill="currentColor" /> AI-Powered
+              Finance Management
             </span>
           </motion.div>
-          
+
           <motion.h1
             variants={itemVariants}
             className="text-7xl font-bold mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-br from-orange-400 via-red-500 to-pink-500"
           >
             Smart Finance <br />
-              Smarter Decisions
-              
-           
+            Smarter Decisions
           </motion.h1>
-          
+
           <motion.p
             variants={itemVariants}
             className="text-xl md:text-2xl text-gray-300 max-w-3xl mb-12 leading-relaxed"
           >
-            Take control of your finances with AI-powered insights that help you
-            save more, spend wisely, and build wealth effortlessly.
+            <div className="text-4xl mx-auto font-normal text-neutral-600 dark:text-neutral-400">
+              Manage your finances&nbsp;
+              <FlipWords words={words} /> <br />
+              with Credence.
+            </div>
           </motion.p>
-          
+
           <motion.div
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-6 justify-center"
@@ -199,7 +198,7 @@ export default function Home() {
             >
               Get Started <ArrowRight size={20} />
             </motion.button>
-            
+
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
@@ -208,12 +207,10 @@ export default function Home() {
               See Demo
             </motion.button>
           </motion.div>
-
-          
         </motion.section>
 
         {/* Timeline Section */}
-        <motion.section 
+        <motion.section
           variants={fadeIn}
           initial="hidden"
           whileInView="visible"
@@ -231,7 +228,7 @@ export default function Home() {
 
           <div className="relative flex justify-center mb-20">
             <div className="absolute left-1/2 h-full w-1 bg-gradient-to-b from-orange-500/80 to-red-500/80 transform -translate-x-1/2" />
-            
+
             <div className="relative z-10">
               {timelineItems.map((item, idx) => (
                 <motion.div
@@ -240,18 +237,26 @@ export default function Home() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.2, duration: 0.6 }}
-                  className={`flex items-center gap-6 mb-16 ${idx % 2 === 0 ? 'flex-row-reverse' : ''}`}
+                  className={`flex items-center gap-6 mb-16 ${
+                    idx % 2 === 0 ? "flex-row-reverse" : ""
+                  }`}
                 >
                   <div className="flex-1 max-w-sm">
-                    <div className={`p-6 rounded-2xl ${idx % 2 === 0 ? 'bg-gradient-to-br from-orange-500/20 to-red-500/20' : 'bg-white/5'} backdrop-blur-md border border-white/10`}>
+                    <div
+                      className={`p-6 rounded-2xl ${
+                        idx % 2 === 0
+                          ? "bg-gradient-to-br from-orange-500/20 to-red-500/20"
+                          : "bg-white/5"
+                      } backdrop-blur-md border border-white/10`}
+                    >
                       <p className="text-xl text-white">{item.text}</p>
                     </div>
                   </div>
-                  
+
                   <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
                     {item.icon}
                   </div>
-                  
+
                   <div className="flex-1 max-w-sm"></div>
                 </motion.div>
               ))}
@@ -259,33 +264,44 @@ export default function Home() {
           </div>
         </motion.section>
 
-         {/* Features Section */}
-         <motion.section id="features" variants={itemVariants} className="mb-24 scroll-mt-20">
+        {/* Features Section */}
+        <motion.section
+          id="features"
+          variants={itemVariants}
+          className="mb-24 scroll-mt-20"
+        >
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-3xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-500">
               Powerful Features
             </h2>
             <p className="text-zinc-300 max-w-2xl mx-auto">
-              Our AI-powered platform analyzes your spending habits and provides personalized recommendations.
+              Our AI-powered platform analyzes your spending habits and provides
+              personalized recommendations.
             </p>
           </motion.div>
 
-          <motion.div variants={containerVariants} className="grid md:grid-cols-3 gap-8">
+          <motion.div
+            variants={containerVariants}
+            className="grid md:grid-cols-3 gap-8"
+          >
             {[
               {
                 icon: <Zap className="w-10 h-10 text-orange-400" />,
                 title: "AI-Powered Insights",
-                description: "Get personalized financial insights based on your spending patterns and financial goals.",
+                description:
+                  "Get personalized financial insights based on your spending patterns and financial goals.",
               },
               {
                 icon: <Shield className="w-10 h-10 text-orange-400" />,
                 title: "Overspending Prevention",
-                description: "Receive real-time alerts when you're about to exceed your budget in any category.",
+                description:
+                  "Receive real-time alerts when you're about to exceed your budget in any category.",
               },
               {
                 icon: <ChartBar className="w-10 h-10 text-orange-400" />,
                 title: "Smart Analytics",
-                description: "Visualize your financial health with intuitive charts and predictive analytics.",
+                description:
+                  "Visualize your financial health with intuitive charts and predictive analytics.",
               },
             ].map((feature, index) => (
               <motion.div
@@ -297,8 +313,12 @@ export default function Home() {
                 }}
                 className="glassmorphism rounded-2xl border border-zinc-800/50 flex flex-col items-center text-center transition-all orange-glow"
               >
-                <div className="mb-4 mt-8 p-4 rounded-full bg-zinc-800/50">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
+                <div className="mb-4 mt-8 p-4 rounded-full bg-zinc-800/50">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">
+                  {feature.title}
+                </h3>
                 <p className="text-zinc-300 px-6 pb-8">{feature.description}</p>
               </motion.div>
             ))}
@@ -306,14 +326,21 @@ export default function Home() {
         </motion.section>
 
         {/* Testimonials */}
-        <motion.section id="testimonials" variants={itemVariants} className="mb-24 scroll-mt-20">
+        <motion.section
+          id="testimonials"
+          variants={itemVariants}
+          className="mb-24 scroll-mt-20"
+        >
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-500">
               What Our Users Say
             </h2>
           </motion.div>
 
-          <motion.div variants={containerVariants} className="grid md:grid-cols-2 gap-8">
+          <motion.div
+            variants={containerVariants}
+            className="grid md:grid-cols-2 gap-8"
+          >
             {[
               {
                 quote:
@@ -322,7 +349,8 @@ export default function Home() {
                 title: "Marketing Director",
               },
               {
-                quote: "I've saved over $3,000 in the last 6 months thanks to the overspending prevention feature.",
+                quote:
+                  "I've saved over $3,000 in the last 6 months thanks to the overspending prevention feature.",
                 name: "Michael Chen",
                 title: "Software Engineer",
               },
@@ -336,11 +364,15 @@ export default function Home() {
                 }}
                 className="glassmorphism rounded-2xl border border-zinc-800/50 p-6 transition-all orange-glow"
               >
-                <p className="text-zinc-300 mb-6 italic">&quot;{testimonial.quote}&quot;</p>
+                <p className="text-zinc-300 mb-6 italic">
+                  &quot;{testimonial.quote}&quot;
+                </p>
                 <div className="flex items-center">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-r from-orange-400 to-orange-500 mr-4"></div>
                   <div>
-                    <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                    <h4 className="font-semibold text-white">
+                      {testimonial.name}
+                    </h4>
                     <p className="text-zinc-400 text-sm">{testimonial.title}</p>
                   </div>
                 </div>
@@ -355,9 +387,12 @@ export default function Home() {
             whileHover={{ scale: 1.02 }}
             className="glassmorphism rounded-2xl border border-orange-500/30 p-10 text-center orange-glow transition-shadow"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to Transform Your Finances?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+              Ready to Transform Your Finances?
+            </h2>
             <p className="text-xl text-zinc-300 max-w-2xl mx-auto mb-8">
-              Join thousands of users who have already improved their financial health with our AI-powered platform.
+              Join thousands of users who have already improved their financial
+              health with our AI-powered platform.
             </p>
             <div className="flex justify-center">
               <Button
