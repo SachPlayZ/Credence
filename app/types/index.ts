@@ -1,4 +1,3 @@
-import { DefaultSession } from "next-auth";
 import { ObjectId } from "mongodb";
 
 declare module "next-auth" {
@@ -29,13 +28,30 @@ export interface Budget {
   userId: ObjectId;
   month: number;
   year: number;
-  amount: number;
-  categories: {
-    name: string;
-    limit: number;
+  totalBudget: number;
+  allocations: {
+    category: string;
+    amount: number;
   }[];
+  unallocated: number;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface BudgetStatus {
+  category: string;
+  budget: number;
+  spent: number;
+  remaining: number;
+  percentage: number;
+}
+
+export interface BudgetOverview {
+  totalBudget: number;
+  totalSpent: number;
+  totalRemaining: number;
+  totalPercentage: number;
+  categories: BudgetStatus[];
 }
 
 export interface Balance {

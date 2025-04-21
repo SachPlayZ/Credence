@@ -2,14 +2,19 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
-import { GET as authHandler } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../auth/config";
 import { Transaction, Balance } from "@/app/types";
-import type { Session } from "next-auth";
 
 // Get user's balance and spending summary
 export async function GET(req: Request) {
   try {
-    const session = (await getServerSession(authHandler)) as Session;
+    const session = await getServerSession(authOptions);
+    console.log(req);
+    console.log("Balance API - Session:", {
+      exists: !!session,
+      userId: session?.user?.id,
+    });
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

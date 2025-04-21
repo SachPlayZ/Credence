@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { GET as authHandler } from "../../auth/[...nextauth]/route";
-import type { Session } from "next-auth";
+import { authOptions } from "../../auth/config";
 import { analyzeBudgetVsExpenses } from "@/app/lib/analyzer";
 import { generateFinancialReport } from "@/app/lib/gemini";
 import { BudgetAnalysisInput } from "@/app/types/ai";
 
 export async function POST(req: Request) {
   try {
-    const session = (await getServerSession(authHandler)) as Session;
+    const session = await getServerSession(authOptions);
+
+    console.log("AI Analysis API - Session:", {
+      exists: !!session,
+      userId: session?.user?.id,
+    });
+
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
