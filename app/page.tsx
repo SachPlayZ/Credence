@@ -119,7 +119,7 @@ export default function Home() {
         </motion.section>
 
         {/* Features Section */}
-        <motion.section variants={itemVariants} className="mb-24">
+        <motion.section id="features" variants={itemVariants} className="mb-24 scroll-mt-20">
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
               Powerful Features
