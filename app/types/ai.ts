@@ -22,6 +22,17 @@ export interface BudgetAnalysis {
 
 export interface FinancialReport {
   summary: string;
+
+  insights: {
+    title: string;
+    description: string;
+    type: "positive" | "warning" | "negative";
+  }[];
+  recommendations: {
+    title: string;
+    description: string;
+    priority: "high" | "medium" | "low";
+  }[];
   overspending_categories: {
     category: string;
     overspent_by: number;

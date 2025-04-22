@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/navbar";
 import { FlipWords } from "@/components/ui/flip-words";
@@ -20,6 +20,53 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button"; // Adjust the path based on your project structure
 
 const words = ["smarter", "stronger", "simpler", "secure"];
+
+interface ScrollRevealProps {
+  children: ReactNode;
+  className?: string;
+}
+
+const ScrollReveal = ({ children, className = "" }: ScrollRevealProps) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "50px",
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 const FloatingParticles = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -114,14 +161,6 @@ export default function Home() {
         duration: 0.6,
         ease: [0.33, 1, 0.68, 1], // Custom easing for smoother motion
       },
-    },
-  };
-
-  const fadeIn = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.8 },
     },
   };
 
@@ -237,13 +276,7 @@ export default function Home() {
         </motion.section>
 
         {/* Timeline Section */}
-        <motion.section
-          variants={fadeIn}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="mb-32"
-        >
+        <ScrollReveal className="mb-32">
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
               How It Works
@@ -289,14 +322,10 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </motion.section>
+        </ScrollReveal>
 
         {/* Features Section */}
-        <motion.section
-          id="features"
-          variants={itemVariants}
-          className="mb-24 scroll-mt-20"
-        >
+        <ScrollReveal className="mb-24 scroll-mt-20">
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-3xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-500">
               Powerful Features
@@ -350,14 +379,10 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
-        </motion.section>
+        </ScrollReveal>
 
         {/* Testimonials */}
-        <motion.section
-          id="testimonials"
-          variants={itemVariants}
-          className="mb-24 scroll-mt-20"
-        >
+        <ScrollReveal className="mb-24 scroll-mt-20">
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-orange-500">
               What Our Users Say
@@ -406,10 +431,10 @@ export default function Home() {
               </motion.div>
             ))}
           </motion.div>
-        </motion.section>
+        </ScrollReveal>
 
         {/* CTA Section */}
-        <motion.section variants={itemVariants} className="mb-24">
+        <ScrollReveal className="mb-24">
           <motion.div
             whileHover={{ scale: 1.02 }}
             className="glassmorphism rounded-2xl border border-orange-500/30 p-10 text-center orange-glow transition-shadow"
@@ -430,26 +455,37 @@ export default function Home() {
               </Button>
             </div>
           </motion.div>
-        </motion.section>
+        </ScrollReveal>
 
         {/* Footer */}
-        <motion.footer
-          variants={itemVariants}
-          className="text-center text-zinc-400 text-sm py-6 border-t border-zinc-800/50"
-        >
-          <div className="flex justify-center gap-6 mb-4">
-            <Link href="#" className="hover:text-orange-400 transition-colors">
-              Terms
-            </Link>
-            <Link href="#" className="hover:text-orange-400 transition-colors">
-              Privacy
-            </Link>
-            <Link href="#" className="hover:text-orange-400 transition-colors">
-              Contact
-            </Link>
-          </div>
-          <p>© {new Date().getFullYear()} Credence. All rights reserved.</p>
-        </motion.footer>
+        <ScrollReveal>
+          <motion.footer
+            variants={itemVariants}
+            className="text-center text-zinc-400 text-sm py-6 border-t border-zinc-800/50"
+          >
+            <div className="flex justify-center gap-6 mb-4">
+              <Link
+                href="#"
+                className="hover:text-orange-400 transition-colors"
+              >
+                Terms
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-orange-400 transition-colors"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-orange-400 transition-colors"
+              >
+                Contact
+              </Link>
+            </div>
+            <p>© {new Date().getFullYear()} Credence. All rights reserved.</p>
+          </motion.footer>
+        </ScrollReveal>
       </motion.div>
     </main>
   );

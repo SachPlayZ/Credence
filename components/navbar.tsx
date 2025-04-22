@@ -49,7 +49,7 @@ export default function Navbar() {
     { name: "Features", href: "#features" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Summary", href: "/summary" },
-    { name: "Blog", href: "#blog" },
+    { name: "FinAI", href: "/finai" },
   ];
 
   return (
