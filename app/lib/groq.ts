@@ -31,18 +31,18 @@ export async function generateFinancialReport(
   const categories = details
     .map(
       (d) =>
-        `- ${d.category}: Spent £${d.spent}, Budget £${d.budget} → ${
+        `- ${d.category}: Spent ₹${d.spent}, Budget ₹${d.budget} → ${
           d.status
-        } by £${Math.abs(d.difference)}`
+        } by ₹${Math.abs(d.difference)}`
     )
     .join("\n");
 
   const prompt = `
 You are a financial advisor AI.
 
-User's Income: £${analysis?.income || 0}
-Total Budget: £${analysis?.total_budget || 0}
-Total Spending: £${analysis?.total_spent || 0}
+User's Income: ₹${analysis?.income || 0}
+Total Budget: ₹${analysis?.total_budget || 0}
+Total Spending: ₹${analysis?.total_spent || 0}
 Overall Status: ${analysis?.status || "under"}
 
 Category Breakdown:
@@ -55,8 +55,8 @@ Based on the data above, generate:
 4. Highlight any overspending categories and how much over they went.
 5. Give actionable advice to save or budget more efficiently.
 6. Offer general financial health tips suitable to this scenario.
-7. All monetary values should be presented in British Pounds (£).
-8. Include advice specific to the UK market and economy when relevant.
+7. All monetary values should be presented in Indian Rupees (₹).
+8. Include advice specific to the Indian market and economy when relevant.
 9. Use a friendly and encouraging tone.
 10. Output should be in json format, with the following keys:
 {
@@ -78,7 +78,7 @@ Based on the data above, generate:
   "overspending_categories": [
     {
       "category": "Category name",
-      "overspent_by": "Amount in Pounds"
+      "overspent_by": "Amount in Rupees"
     }
   ],
   "actionable_advice": ["List of specific advice"],

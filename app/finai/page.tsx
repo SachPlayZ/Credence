@@ -198,7 +198,7 @@ export default function FinancialAnalysisPage() {
         <p>
           {loading ? "Loading AI..." : 
            error ? "AI failed to load" : 
-           finaiData ? "Powered by Groq LLM (llama3-70b)" : "AI not available"}
+           finaiData ? "Powered by Groq LLM (llama3-70b) • Currency: ₹ Indian Rupee" : "AI not available"}
         </p>
         {finaiData?.aiAnalysis && (
           <div className="mt-2 p-2 bg-gray-100 rounded inline-block">
