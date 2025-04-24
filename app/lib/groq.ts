@@ -22,11 +22,20 @@ function cleanJsonResponse(text: string): string {
   return text;
 }
 
+// Helper function to extract first name
+function getFirstName(fullName: string): string {
+  return fullName.split(' ')[0];
+}
+
 export async function generateFinancialReport(
   analysis: BudgetAnalysis
 ): Promise<FinancialReport> {
   // Ensure analysis.details exists with a default empty array
   const details = analysis?.details || [];
+  
+  // Get user's first name or default to "there"
+  const fullName = analysis?.userName || "there";
+  const firstName = getFirstName(fullName);
 
   const categories = details
     .map(
@@ -40,7 +49,11 @@ export async function generateFinancialReport(
   const prompt = `
 You are a financial advisor AI.
 
-User's Income: ₹${analysis?.income || 0}
+Hello ${firstName},
+
+Here's an analysis of your financial data:
+
+Your Income: ₹${analysis?.income || 0}
 Total Budget: ₹${analysis?.total_budget || 0}
 Total Spending: ₹${analysis?.total_spent || 0}
 Overall Status: ${analysis?.status || "under"}
@@ -49,7 +62,7 @@ Category Breakdown:
 ${categories}
 
 Based on the data above, generate:
-1. A summary of the user's financial behavior.
+1. A summary of ${firstName}'s financial behavior.
 2. Key insights about spending patterns and budget adherence.
 3. Specific recommendations with priority levels.
 4. Highlight any overspending categories and how much over they went.
@@ -57,7 +70,7 @@ Based on the data above, generate:
 6. Offer general financial health tips suitable to this scenario.
 7. All monetary values should be presented in Indian Rupees (₹).
 8. Include advice specific to the Indian market and economy when relevant.
-9. Use a friendly and encouraging tone.
+9. Use a friendly and encouraging tone, addressing ${firstName} by first name only.
 10. Output should be in json format, with the following keys:
 {
   "summary": "A brief summary of the user's financial behavior",
@@ -87,6 +100,7 @@ Based on the data above, generate:
 11. Ensure the JSON is well-structured and valid.
 12. DO NOT wrap the JSON in markdown code blocks or any other formatting.
 13. Make sure recommendations are specific and actionable, with appropriate priority levels based on their impact and urgency.
+14. Address the user as ${firstName} in the generated output text, not as "[user]" or the full name.
 `;
 
   try {

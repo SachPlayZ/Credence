@@ -141,6 +141,11 @@ export async function GET(req: Request) {
 
     // Get AI analysis
     const analysis = analyzeBudgetVsExpenses(analysisInput);
+    
+    // Add user's name to the analysis
+    analysis.userName = session?.user?.name || session?.user?.email?.split('@')[0] || "there";
+    
+    // Generate the AI report with the user's name
     const aiReport = await generateFinancialReport(analysis);
 
     // Combine all data

@@ -33,6 +33,9 @@ export async function POST(req: Request) {
 
     // Analyze budget vs expenses
     const analysis = analyzeBudgetVsExpenses(data);
+    
+    // Add user's name to the analysis
+    analysis.userName = session?.user?.name || session?.user?.email?.split('@')[0] || "there";
 
     // Generate AI report
     console.log("Generating financial report with Groq...");
