@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { authOptions } from "../../auth/config";
-import { generateFinancialReport } from "@/app/lib/gemini";
+import { generateFinancialReport } from "@/app/lib/groq"; // Changed from gemini to groq
 import { analyzeBudgetVsExpenses } from "@/app/lib/analyzer";
 
 export async function GET(req: Request) {
@@ -117,8 +117,7 @@ export async function GET(req: Request) {
       budgeted: currentBudget.totalBudget,
       spent: breakdown.reduce((sum, item) => sum + item.spent, 0),
       remaining:
-        currentBudget.totalBudget -
-        breakdown.reduce((sum, item) => sum + item.spent, 0),
+        currentBudget.totalBudget - breakdown.reduce((sum, item) => sum + item.spent, 0),
     };
 
     // Prepare data for AI analysis
