@@ -1,11 +1,23 @@
+/**
+ * Financial Report Generator using Groq AI
+ * 
+ * This module interfaces with the Groq AI API to generate personalized
+ * financial reports based on budget analysis data.
+ */
 import Groq from "groq-sdk";
 import { BudgetAnalysis, FinancialReport } from "../types/ai";
 
-// Initialize Groq client
+// Initialize Groq client with API key from environment variables
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY!,
 });
 
+/**
+ * Cleans and formats the JSON response from the AI
+ * 
+ * @param text - Raw text response from Groq API
+ * @returns Cleaned JSON string ready for parsing
+ */
 function cleanJsonResponse(text: string): string {
   // Remove markdown code blocks if present
   text = text
@@ -22,11 +34,22 @@ function cleanJsonResponse(text: string): string {
   return text;
 }
 
-// Helper function to extract first name
+/**
+ * Extracts the first name from a full name string
+ * 
+ * @param fullName - User's full name
+ * @returns First name only
+ */
 function getFirstName(fullName: string): string {
   return fullName.split(' ')[0];
 }
 
+/**
+ * Generates a comprehensive financial report using Groq AI
+ * 
+ * @param analysis - Budget analysis data with income, expenses, and budget details
+ * @returns Structured financial report with insights and recommendations
+ */
 export async function generateFinancialReport(
   analysis: BudgetAnalysis
 ): Promise<FinancialReport> {
@@ -37,6 +60,7 @@ export async function generateFinancialReport(
   const fullName = analysis?.userName || "there";
   const firstName = getFirstName(fullName);
 
+  // Format category details for the prompt
   const categories = details
     .map(
       (d) =>
@@ -46,6 +70,7 @@ export async function generateFinancialReport(
     )
     .join("\n");
 
+  // Construct a detailed prompt for the AI model
   const prompt = `
 You are a financial advisor AI.
 
@@ -104,9 +129,9 @@ Based on the data above, generate:
 `;
 
   try {
-    // Use Groq's API with Llama 3 model (most similar to Gemini's capabilities)
+    // Call Groq API with Llama 3 model 
     const completion = await groq.chat.completions.create({
-      model: "llama3-70b-8192",  // Using Llama 3 70B model
+      model: "llama3-70b-8192",  // Using Llama 3 70B model (similar to Gemini's capabilities)
       messages: [
         {
           role: "system",
@@ -117,19 +142,18 @@ Based on the data above, generate:
           content: prompt
         }
       ],
-      temperature: 0.7,
-      max_tokens: 1500,
-      response_format: { type: "json_object" }
+      temperature: 0.7,         // Controls creativity vs consistency
+      max_tokens: 1500,         // Limits response length
+      response_format: { type: "json_object" }  // Ensures JSON formatted response
     });
 
-    // Extract the content
+    // Extract and clean the AI response
     const text = completion.choices[0]?.message?.content || "{}";
-    
-    // Clean and parse the JSON response
     const cleanedText = cleanJsonResponse(text);
     console.log(cleanedText);
     return JSON.parse(cleanedText) as FinancialReport;
   } catch (error) {
+    // Error handling and logging
     console.error("Failed to generate report with Groq:", error);
     throw new Error("Failed to generate financial report");
   }
