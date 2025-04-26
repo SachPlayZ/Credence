@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CategoryBreakdownTable } from "@/components/component/category-breakdown-table";
+import { motion } from "framer-motion";
+import Navbar from "@/components/navbar";
 
 interface AIReport {
   summary: string;
@@ -97,101 +99,200 @@ export default function FinancialAnalysisPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Financial Analysis Dashboard</h1>
+    <main className="min-h-screen overflow-x-hidden relative">
+      {/* Grid overlay */}
+      <div className="fixed inset-0 -z-5 bg-[url('/grid.svg')] bg-center opacity-10" />
 
-      {loading && (
-        <div className="flex justify-center items-center min-h-[200px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      )}
+      <Navbar />
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-          {error}
-        </div>
-      )}
+      <div className="container mx-auto px-4 py-8 pt-24">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500"
+        >
+          AI-Powered Financial Analysis
+        </motion.h1>
 
-      {/* AI Analysis Results */}
-      {finaiData?.aiAnalysis && !loading && (
-        <div className="grid gap-6 mb-8">
-          {/* AI Summary */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">AI Analysis Summary</h2>
-            <p className="text-gray-600 mb-4">
-              {finaiData.aiAnalysis.report.summary}
-            </p>
-          </Card>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-center items-center min-h-[200px]"
+          >
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+          </motion.div>
+        )}
 
-          {/* Key Insights */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Key Insights</h2>
-            <div className="grid gap-4">
-              {finaiData.aiAnalysis.report.insights.map((insight, index) => (
-                <div
-                  key={index}
-                  className="border-l-4 pl-4"
-                  style={{
-                    borderColor:
-                      insight.type === "positive"
-                        ? "#10B981"
-                        : insight.type === "warning"
-                        ? "#F59E0B"
-                        : "#EF4444",
-                  }}
-                >
-                  <h3
-                    className={`font-semibold ${getInsightColor(insight.type)}`}
-                  >
-                    {insight.title}
-                  </h3>
-                  <p className="text-gray-600">{insight.description}</p>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6"
+          >
+            {error}
+          </motion.div>
+        )}
+
+        {/* AI Analysis Results */}
+        {finaiData?.aiAnalysis && !loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="grid gap-6 mb-8"
+          >
+            {/* AI Summary */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ scale: 1.01 }}
+              className="transition-all"
+            >
+              <Card className="p-6 glassmorphism border-orange-500/30 orange-glow">
+                <h2 className="text-xl font-semibold mb-4 text-white">
+                  AI Analysis Summary
+                </h2>
+                <p className="text-gray-300 mb-4">
+                  {finaiData.aiAnalysis.report.summary}
+                </p>
+              </Card>
+            </motion.div>
+
+            {/* Key Insights */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ scale: 1.01 }}
+              className="transition-all"
+            >
+              <Card className="p-6 glassmorphism border-orange-500/30 orange-glow">
+                <h2 className="text-xl font-semibold mb-4 text-white">
+                  Key Insights
+                </h2>
+                <div className="grid gap-4">
+                  {finaiData.aiAnalysis.report.insights.map(
+                    (insight, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="border-l-4 pl-4 hover:pl-6 transition-all"
+                        style={{
+                          borderColor:
+                            insight.type === "positive"
+                              ? "#10B981"
+                              : insight.type === "warning"
+                              ? "#F59E0B"
+                              : "#EF4444",
+                        }}
+                      >
+                        <h3
+                          className={`font-semibold ${getInsightColor(
+                            insight.type
+                          )}`}
+                        >
+                          {insight.title}
+                        </h3>
+                        <p className="text-gray-300">{insight.description}</p>
+                      </motion.div>
+                    )
+                  )}
                 </div>
-              ))}
-            </div>
-          </Card>
+              </Card>
+            </motion.div>
 
-          {/* Recommendations */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
-            <div className="grid gap-4">
-              {finaiData.aiAnalysis.report.recommendations.map((rec, index) => (
-                <div
-                  key={index}
-                  className={`p-4 border rounded-lg ${getPriorityColor(
-                    rec.priority
-                  )}`}
-                >
-                  <h3 className="font-semibold">
-                    {rec.priority === "high" && "🔥 "}
-                    {rec.priority === "medium" && "⚡ "}
-                    {rec.priority === "low" && "💡 "}
-                    {rec.title}
-                  </h3>
-                  <p className="text-gray-600">{rec.description}</p>
+            {/* Recommendations */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ scale: 1.01 }}
+              className="transition-all"
+            >
+              <Card className="p-6 glassmorphism border-orange-500/30 orange-glow">
+                <h2 className="text-xl font-semibold mb-4 text-white">
+                  Recommendations
+                </h2>
+                <div className="grid gap-4">
+                  {finaiData.aiAnalysis.report.recommendations.map(
+                    (rec, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.02 }}
+                        className={`p-4 border rounded-lg glassmorphism hover:border-orange-500/30 transition-all ${
+                          rec.priority === "high"
+                            ? "border-red-500/30 bg-red-500/10"
+                            : rec.priority === "medium"
+                            ? "border-yellow-500/30 bg-yellow-500/10"
+                            : "border-green-500/30 bg-green-500/10"
+                        }`}
+                      >
+                        <h3 className="font-semibold text-white">
+                          {rec.priority === "high" && "🔥 "}
+                          {rec.priority === "medium" && "⚡ "}
+                          {rec.priority === "low" && "💡 "}
+                          {rec.title}
+                        </h3>
+                        <p className="text-gray-300">{rec.description}</p>
+                      </motion.div>
+                    )
+                  )}
                 </div>
-              ))}
-            </div>
-          </Card>
+              </Card>
+            </motion.div>
 
-          {/* General Tips */}
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Financial Tips</h2>
-            <ul className="list-disc list-inside space-y-2">
-              {finaiData.aiAnalysis.report.general_tips.map((tip, index) => (
-                <li key={index} className="text-gray-600">
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </div>
-      )}
+            {/* General Tips */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              whileHover={{ scale: 1.01 }}
+              className="transition-all"
+            >
+              <Card className="p-6 glassmorphism border-orange-500/30 orange-glow">
+                <h2 className="text-xl font-semibold mb-4 text-white">
+                  Financial Tips
+                </h2>
+                <ul className="list-disc list-inside space-y-2">
+                  {finaiData.aiAnalysis.report.general_tips.map(
+                    (tip, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="text-gray-300 hover:text-white transition-colors"
+                      >
+                        {tip}
+                      </motion.li>
+                    )
+                  )}
+                </ul>
+              </Card>
+            </motion.div>
+          </motion.div>
+        )}
 
-      {/* Category Breakdown Table Component */}
-      <div className="mb-8">
-        <CategoryBreakdownTable />
+        {/* Category Breakdown Table Component */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mb-8"
+        >
+          <Card className="glassmorphism border-orange-500/30 orange-glow">
+            <CategoryBreakdownTable />
+          </Card>
+        </motion.div>
       </div>
-    </div>
+    </main>
   );
 }
