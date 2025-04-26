@@ -46,10 +46,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Feedback", href: "/feedback" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Summary", href: "/summary" },
-    { name: "FinAI", href: "/finai" },
+    { name: "CredAI", href: "/finai" },
+    { name: "Feedback", href: "/feedback" },
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-16">
             {navLinks.map((link) => (
               <motion.a
                 key={link.name}
