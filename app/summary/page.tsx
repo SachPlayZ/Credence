@@ -11,7 +11,7 @@ import Navbar from "@/components/navbar"
 
 export default function Summary() {
   return (
-    <div className="space-y-6 py-12 px-10">
+    <div className="space-y-6 py-12 px-10 mx-6 my-8">
     <Navbar/>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <DateRangeFilter />

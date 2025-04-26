@@ -153,9 +153,9 @@ export function MonthlyBarChart() {
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl orange-glow transition-shadow hover:shadow-lg">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
       <CardHeader>
-        <CardTitle className="text-zinc-200">
+        <CardTitle className="text-2xl font-bold text-zinc-400">
           Monthly Income vs Expenses
         </CardTitle>
         <CardDescription className="text-zinc-400">

@@ -71,7 +71,7 @@ export default function Navbar() {
           >
             <Link
               href="/"
-              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500"
+              className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-red-500 to-pink-700"
             >
               Credence
             </Link>

@@ -6,12 +6,10 @@ import { EditIcon, SaveIcon, XIcon } from "lucide-react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -47,13 +45,10 @@ export function BudgetStatusOverview() {
     try {
       const currentDate = new Date();
       const response = await fetch(
-        `/api/finance/budget/status?month=${
-          currentDate.getMonth() + 1
-        }&year=${currentDate.getFullYear()}`
+        `/api/finance/budget/status?month=${currentDate.getMonth() + 1}&year=${currentDate.getFullYear()}`
       );
 
       if (response.status === 404) {
-        // No budget exists for this month
         setBudgetOverview({
           totalBudget: 0,
           totalSpent: 0,
@@ -79,14 +74,12 @@ export function BudgetStatusOverview() {
     }
   };
 
-  // Fetch on mount and every 30 seconds
   useEffect(() => {
     fetchBudgetStatus();
     const interval = setInterval(fetchBudgetStatus, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  // Re-fetch when editing is done
   useEffect(() => {
     if (!isEditing) {
       fetchBudgetStatus();
@@ -113,9 +106,7 @@ export function BudgetStatusOverview() {
       const currentDate = new Date();
       const response = await fetch("/api/finance/budget", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           month: currentDate.getMonth() + 1,
           year: currentDate.getFullYear(),
@@ -124,13 +115,11 @@ export function BudgetStatusOverview() {
             category: cat.category,
             amount: cat.budget,
           })),
-          unallocated: 0, // Calculate if needed
+          unallocated: 0,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update budget");
-      }
+      if (!response.ok) throw new Error("Failed to update budget");
 
       toast.success("Budget updated successfully");
       setIsEditing(false);
@@ -143,7 +132,6 @@ export function BudgetStatusOverview() {
 
   const handleBudgetChange = (categoryIndex: number, newBudget: number) => {
     if (!editedBudget) return;
-
     const newCategories = [...editedBudget.categories];
     newCategories[categoryIndex] = {
       ...newCategories[categoryIndex],
@@ -152,10 +140,7 @@ export function BudgetStatusOverview() {
       percentage: (newCategories[categoryIndex].spent / newBudget) * 100,
     };
 
-    const newTotalBudget = newCategories.reduce(
-      (sum, cat) => sum + cat.budget,
-      0
-    );
+    const newTotalBudget = newCategories.reduce((sum, cat) => sum + cat.budget, 0);
 
     setEditedBudget({
       ...editedBudget,
@@ -167,196 +152,83 @@ export function BudgetStatusOverview() {
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
-          <CardTitle className="text-xl font-bold">Budget Status</CardTitle>
-          <CardDescription className="text-zinc-400">
-            Current month&apos;s budget overview
-          </CardDescription>
-        </div>
-        <div className="flex gap-2">
-          {isEditing ? (
-            <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCancel}
-                className="h-8 px-2 text-red-400 hover:text-red-300 hover:bg-zinc-800"
-              >
-                <XIcon className="h-4 w-4" />
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+              Budget Overview
+            </CardTitle>
+          </div>
+          <div className="flex space-x-2">
+            {isEditing ? (
+              <>
+                <Button size="icon" variant="ghost" onClick={handleSave}>
+                  <SaveIcon className="h-5 w-5 text-green-500" />
+                </Button>
+                <Button size="icon" variant="ghost" onClick={handleCancel}>
+                  <XIcon className="h-5 w-5 text-red-500" />
+                </Button>
+              </>
+            ) : (
+              <Button size="icon" variant="ghost" onClick={handleEdit}>
+                <EditIcon className="h-5 w-5 text-zinc-400" />
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSave}
-                className="h-8 px-2 text-green-400 hover:text-green-300 hover:bg-zinc-800"
-              >
-                <SaveIcon className="h-4 w-4" />
-              </Button>
-            </>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleEdit}
-              className="h-8 px-2 text-orange-400 hover:text-orange-300 hover:bg-zinc-800"
-            >
-              <EditIcon className="h-4 w-4" />
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </CardHeader>
+
       <CardContent>
         {isLoading ? (
-          <div className="text-center py-8 text-zinc-400">
-            Loading budget status...
+          <div className="flex items-center justify-center h-32">
+            <div className="animate-pulse space-y-4 w-full">
+              <div className="h-10 bg-zinc-800/50 rounded-md w-3/4 mx-auto"></div>
+              <div className="h-6 bg-zinc-800/50 rounded-md w-1/2 mx-auto"></div>
+              <div className="h-20 bg-zinc-800/50 rounded-md w-full"></div>
+            </div>
           </div>
         ) : (
-          <>
-            {/* Total Budget Overview */}
-            <div className="mb-6 p-4 bg-zinc-800/30 rounded-xl">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-medium text-lg">Total Budget</span>
-                <span
-                  className={
-                    (isEditing
-                      ? editedBudget?.totalRemaining ??
-                        budgetOverview.totalRemaining
-                      : budgetOverview.totalRemaining) < 0
-                      ? "text-red-500 font-medium"
-                      : "text-green-500 font-medium"
-                  }
-                >
-                  ₹{budgetOverview.totalSpent.toFixed(2)} / ₹
-                  {(isEditing
-                    ? editedBudget?.totalBudget ?? budgetOverview.totalBudget
-                    : budgetOverview.totalBudget
-                  ).toFixed(2)}
-                </span>
-              </div>
-              <Progress
-                value={
-                  isEditing
-                    ? editedBudget?.totalPercentage ??
-                      budgetOverview.totalPercentage
-                    : budgetOverview.totalPercentage
-                }
-                className={cn(
-                  "h-3",
-                  (isEditing
-                    ? editedBudget?.totalPercentage ??
-                      budgetOverview.totalPercentage
-                    : budgetOverview.totalPercentage) >= 100
-                    ? "bg-red-500"
-                    : (isEditing
-                        ? editedBudget?.totalPercentage ??
-                          budgetOverview.totalPercentage
-                        : budgetOverview.totalPercentage) >= 80
-                    ? "bg-orange-500"
-                    : "orange-gradient"
-                )}
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-sm text-zinc-400">
-                  {(isEditing
-                    ? editedBudget?.totalPercentage ??
-                      budgetOverview.totalPercentage
-                    : budgetOverview.totalPercentage
-                  ).toFixed(1)}
-                  % spent
-                </span>
-                <span
-                  className={`text-sm ${
-                    (isEditing
-                      ? editedBudget?.totalRemaining ??
-                        budgetOverview.totalRemaining
-                      : budgetOverview.totalRemaining) < 0
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }`}
-                >
-                  {(isEditing
-                    ? editedBudget?.totalRemaining ??
-                      budgetOverview.totalRemaining
-                    : budgetOverview.totalRemaining) < 0
-                    ? "Over by "
-                    : "Remaining: "}
-                  ₹
-                  {Math.abs(
-                    isEditing
-                      ? editedBudget?.totalRemaining ??
-                          budgetOverview.totalRemaining
-                      : budgetOverview.totalRemaining
-                  ).toFixed(2)}
-                </span>
-              </div>
+          <div className="space-y-6 pt-2">
+            <div>
+              <p className="text-5xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                ₹{budgetOverview.totalRemaining.toFixed(2)}
+              </p>
+              <p className="text-base text-zinc-400 mt-1 ml-3">
+                Remaining from ₹{budgetOverview.totalBudget.toFixed(2)}
+              </p>
             </div>
 
-            {/* Category Breakdown */}
             <div className="space-y-4">
-              {(isEditing
-                ? editedBudget?.categories ?? budgetOverview.categories
-                : budgetOverview.categories
-              ).map((budget, index) => (
-                <div key={budget.category} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">{budget.category}</span>
-                    <div className="flex items-center gap-2">
-                      {isEditing ? (
-                        <Input
-                          type="number"
-                          value={budget.budget}
-                          onChange={(e) =>
-                            handleBudgetChange(
-                              index,
-                              parseFloat(e.target.value) || 0
-                            )
-                          }
-                          className="w-24 h-7 px-2 text-right bg-zinc-800/50 border-zinc-700"
-                        />
-                      ) : (
-                        <span
-                          className={
-                            budget.percentage >= 100
-                              ? "text-red-500"
-                              : "text-zinc-400"
-                          }
-                        >
-                          ₹{budget.spent.toFixed(2)} / ₹
-                          {budget.budget.toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <Progress
-                    value={budget.percentage}
-                    className={cn(
-                      "h-2",
-                      budget.percentage >= 100
-                        ? "bg-red-500"
-                        : budget.percentage >= 80
-                        ? "bg-orange-500"
-                        : "orange-gradient"
+              {(
+                isEditing ? editedBudget?.categories : budgetOverview.categories
+              )?.map((category, index) => (
+                <div
+                  key={index}
+                  className="bg-zinc-800/20 backdrop-blur-sm p-4 rounded-xl border border-zinc-800/50"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="text-sm font-medium text-zinc-400">{category.category}</p>
+                    {isEditing ? (
+                      <Input
+                        type="number"
+                        value={category.budget}
+                        onChange={(e) => handleBudgetChange(index, parseFloat(e.target.value))}
+                        className="w-24 h-8 text-sm"
+                      />
+                    ) : (
+                      <p className="text-sm text-zinc-300">₹{category.budget.toFixed(2)}</p>
                     )}
-                  />
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-zinc-500">
-                      {budget.percentage.toFixed(1)}% spent
-                    </span>
-                    <span
-                      className={`text-xs ${
-                        budget.remaining < 0 ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {budget.remaining < 0 ? "Over by " : "Remaining: "}₹
-                      {Math.abs(budget.remaining).toFixed(2)}
-                    </span>
                   </div>
+                  <Progress value={category.percentage} className="h-2" />
+                  <p className="text-xs text-zinc-500 mt-1">
+                    Spent: ₹{category.spent.toFixed(2)} / Remaining: ₹{category.remaining.toFixed(2)}
+                  </p>
                 </div>
               ))}
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>

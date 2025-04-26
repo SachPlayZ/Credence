@@ -48,11 +48,11 @@ export function StatsCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <Card className="glassmorphism rounded-2xl orange-glow transition-shadow">
+      <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-400">Total Income</p>
+              <p className="text-base font-medium text-zinc-400">Total Income</p>
               <h3 className="text-2xl font-bold text-green-500 mt-1">
                 {isLoading
                   ? "Loading..."
@@ -67,13 +67,11 @@ export function StatsCards() {
         </CardContent>
       </Card>
 
-      <Card className="glassmorphism rounded-2xl orange-glow transition-shadow">
+      <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-400">
-                Total Expenses
-              </p>
+              <p className="text-base font-medium text-zinc-400">Total Expenses</p>
               <h3 className="text-2xl font-bold text-red-500 mt-1">
                 {isLoading
                   ? "Loading..."
@@ -88,11 +86,11 @@ export function StatsCards() {
         </CardContent>
       </Card>
 
-      <Card className="glassmorphism rounded-2xl orange-glow transition-shadow">
+      <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-400">Total Savings</p>
+              <p className="text-base font-medium text-zinc-400">Total Savings</p>
               <h3
                 className={`text-2xl font-bold mt-1 ${
                   savings >= 0 ? "text-green-500" : "text-red-500"

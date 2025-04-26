@@ -203,13 +203,10 @@ export function ExpensePieChart() {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-200">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="text-2xl font-bold text-zinc-400">
           {monthName} {data.year} - Expenses by Category
-          <span className="block text-sm font-normal text-zinc-400 mt-1">
-            Total: ₹{data.totals.spent.toFixed(2)}
-          </span>
         </CardTitle>
       </CardHeader>
       <CardContent className="h-[400px]">

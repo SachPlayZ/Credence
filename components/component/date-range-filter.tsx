@@ -8,9 +8,9 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export function DateRangeFilter() {
   return (
-    <Card className="glassmorphism rounded-2xl">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
       <CardContent className="p-6">
-        <div className="flex flex-col md:flex-row gap-4 items-end">
+        <div className="flex flex-col md:flex-row gap-12 items-end">
           <div className="w-full md:w-auto">
             <Label htmlFor="date-range" className="text-sm text-zinc-400">
               Date Range
@@ -52,7 +52,7 @@ export function DateRangeFilter() {
               </SelectContent>
             </Select>
           </div>
-          <Button className="orange-gradient orange-glow transition-shadow">Apply Filters</Button>
+          <Button className="bg-gradient-to-r from-orange-600 to-pink-600 transition-shadow">Apply Filters</Button>
         </div>
       </CardContent>
     </Card>
