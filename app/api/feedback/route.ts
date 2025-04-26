@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/config";
-import { cookies } from "next/headers";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
@@ -32,28 +31,17 @@ export async function POST(request: Request) {
       updatedAt: new Date(),
     };
 
-    // Connect to MongoDB and save the feedback
+    // Connect to MongoDB
     const client = await clientPromise;
     const db = client.db("credence");
     const feedbackCollection = db.collection("feedback");
 
     await feedbackCollection.insertOne(enrichedFeedbackData);
 
-    // Create response with cookie
-    const response = NextResponse.json(
+    return NextResponse.json(
       { message: "Feedback submitted successfully" },
       { status: 200 }
     );
-
-    // Set cookie to mark feedback as submitted
-    response.cookies.set("feedback_submitted", "true", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 365 * 24 * 60 * 60, // 1 year
-    });
-
-    return response;
   } catch (error) {
     console.error("Error processing feedback:", error);
     return NextResponse.json(
@@ -63,12 +51,28 @@ export async function POST(request: Request) {
   }
 }
 
-// Add a GET endpoint to check if user has submitted feedback
+// Check if user has submitted feedback
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const hasFeedback = cookieStore.get("feedback_submitted")?.value === "true";
-    return NextResponse.json({ hasSubmitted: hasFeedback });
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json(
+        { error: "You must be logged in to check feedback status" },
+        { status: 401 }
+      );
+    }
+
+    const client = await clientPromise;
+    const db = client.db("credence");
+    const feedbackCollection = db.collection("feedback");
+
+    // Check if user has submitted feedback
+    const existingFeedback = await feedbackCollection.findOne({
+      userId: new ObjectId(session.user.id),
+    });
+
+    return NextResponse.json({ hasSubmitted: !!existingFeedback });
   } catch (error) {
     console.error("Error checking feedback status:", error);
     return NextResponse.json(
