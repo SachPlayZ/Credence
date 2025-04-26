@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.5.0",
+    "groq-sdk": "^0.20.1",
     "lucide-react": "^0.483.0",
     "mongodb": "^6.15.0",
     "motion": "^12.7.4",

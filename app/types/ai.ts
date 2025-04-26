@@ -18,6 +18,7 @@ export interface BudgetAnalysis {
   total_budget: number;
   status: "over" | "under";
   details: CategoryAnalysis[];
+  userName?: string; // Add optional userName field
 }
 
 export interface FinancialReport {
