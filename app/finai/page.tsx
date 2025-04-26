@@ -293,13 +293,17 @@ export default function FinancialAnalysisPage() {
           </Card>
         </motion.div>
       </div>
-      
+
       {/* AI Model Indicator */}
       <div className="text-center text-sm text-gray-500 mt-4">
         <p>
-          {loading ? "Loading AI..." : 
-           error ? "AI failed to load" : 
-           finaiData ? "Powered by Groq LLM (llama3-70b) • Currency: ₹ Indian Rupee" : "AI not available"}
+          {loading
+            ? "Loading AI..."
+            : error
+            ? "AI failed to load"
+            : finaiData
+            ? "Powered by Groq LLM (llama3-70b) • Currency: ₹ Indian Rupee"
+            : "AI not available"}
         </p>
         {finaiData?.aiAnalysis && (
           <div className="mt-2 p-2 bg-gray-100 rounded inline-block">
@@ -310,6 +314,6 @@ export default function FinancialAnalysisPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }
