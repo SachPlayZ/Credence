@@ -69,45 +69,64 @@ const ScrollReveal = ({ children, className = "" }: ScrollRevealProps) => {
 };
 
 const FloatingParticles = () => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  // Using constant fallback dimensions instead of window
+  // These will be updated with useEffect after component mounts
+  const [dimensions, setDimensions] = useState({ width: 1200, height: 800 });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Set initial dimensions
-    setDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-
-    // Update dimensions on window resize
-    const handleResize = () => {
+    // Set isMounted to true after component mounts
+    setIsMounted(true);
+    
+    // Only access window when we're in the browser
+    if (typeof window !== "undefined") {
+      // Set initial dimensions
       setDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      // Update dimensions on window resize
+      const handleResize = () => {
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
+
+  // Create an array of particles with random initial positions
+  const particles = Array.from({ length: 20 }).map((_, i) => ({
+    id: i,
+    x: Math.random(),  // Stored as percentage (0-1) instead of pixels
+    y: Math.random(),
+    opacity: Math.random() * 0.5 + 0.3,
+    scale: Math.random() * 2 + 0.5,
+    duration: Math.random() * 10 + 15,
+  }));
 
   return (
     <div className="fixed inset-0 -z-5 opacity-60">
-      {Array.from({ length: 20 }).map((_, i) => (
+      {isMounted && particles.map((particle) => (
         <motion.div
-          key={i}
+          key={particle.id}
           className="absolute w-1 h-1 rounded-full bg-orange-500"
           initial={{
-            x: Math.random() * dimensions.width,
-            y: Math.random() * dimensions.height,
-            opacity: Math.random() * 0.5 + 0.3,
-            scale: Math.random() * 2 + 0.5,
+            x: particle.x * dimensions.width,
+            y: particle.y * dimensions.height,
+            opacity: particle.opacity,
+            scale: particle.scale,
           }}
           animate={{
-            y: [null, "-20vh"],
+            y: [null, `${particle.y * dimensions.height - 200}px`],
             opacity: [null, 0],
           }}
           transition={{
-            duration: Math.random() * 10 + 15,
+            duration: particle.duration,
             repeat: Infinity,
             ease: "linear",
           }}
@@ -116,6 +135,7 @@ const FloatingParticles = () => {
     </div>
   );
 };
+
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
