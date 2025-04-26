@@ -253,16 +253,13 @@ export default function Home() {
             variants={itemVariants}
             className="flex flex-col sm:flex-row gap-6 justify-center"
           >
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 25px rgba(255, 99, 71, 0.8)",
-              }}
+              <motion.button
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="px-10 py-4 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 text-white font-medium flex items-center justify-center gap-3 shadow-lg shadow-orange-500/30 text-lg"
+              className="px-10 py-4 rounded-2xl bg-orange-600 backdrop-blur-md border border-white/20 text-white font-medium text-lg hover:bg-orange-700 transition-colors"
             >
               <Link href="/dashboard" className="flex items-center gap-3">
-                Get Started <ArrowRight size={20} />
+                Get Started <ArrowRight size={18} />
               </Link>
             </motion.button>
 
@@ -271,7 +268,7 @@ export default function Home() {
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-medium text-lg hover:bg-white/15 transition-colors"
             >
-              <Link href="/summary" className="flex items-center gap-3">
+              <Link href="/dashboard" className="flex items-center gap-3">
                 See Demo
               </Link>
             </motion.button>
@@ -450,12 +447,14 @@ export default function Home() {
               health with our AI-powered platform.
             </p>
             <div className="flex justify-center">
-              <Button
-                size="lg"
-                className="orange-gradient orange-glow transition-shadow flex items-center gap-2 text-base"
-              >
-                Get Started Today <ArrowRight size={18} />
-              </Button>
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <Button
+                  size="lg"
+                  className="orange-gradient orange-glow transition-shadow flex items-center gap-2 text-base"
+                >
+                  Get Started Today <ArrowRight size={18} />
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </ScrollReveal>
