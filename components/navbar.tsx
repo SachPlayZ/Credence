@@ -46,10 +46,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Summary", href: "/summary" },
-    { name: "FinAI", href: "/finai" },
+    { name: "CredAI", href: "/finai" },
+    { name: "Feedback", href: "/feedback" },
   ];
 
   return (
@@ -71,14 +71,14 @@ export default function Navbar() {
           >
             <Link
               href="/"
-              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500"
+              className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-red-500 to-pink-700"
             >
               Credence
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-16">
             {navLinks.map((link) => (
               <motion.a
                 key={link.name}

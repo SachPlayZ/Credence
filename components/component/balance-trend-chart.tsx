@@ -56,9 +56,14 @@ export function BalanceTrendChart() {
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl orange-glow transition-shadow">
-      <CardHeader>
-        <CardTitle className="text-zinc-200">Balance Trend</CardTitle>
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <div className="flex items-center space-x-2">
+          <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+            Balance Trend
+          </CardTitle>
+        </div>
       </CardHeader>
       <CardContent>
         {isLoading ? (

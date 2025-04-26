@@ -175,10 +175,15 @@ export function TransactionTable() {
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Recent Transactions</CardTitle>
-        <CardDescription className="text-zinc-400">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <div className="flex items-center space-x-2">
+          <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+            Recent Transactions
+          </CardTitle>
+        </div>
+        <CardDescription className="text-zinc-400 ml-3">
           View and manage your recent financial activities
         </CardDescription>
       </CardHeader>
@@ -233,9 +238,7 @@ export function TransactionTable() {
                 <TableHead className="text-zinc-300">Amount</TableHead>
                 <TableHead className="text-zinc-300">Category</TableHead>
                 <TableHead className="text-zinc-300">Description</TableHead>
-                <TableHead className="text-zinc-300 text-right">
-                  Actions
-                </TableHead>
+                <TableHead className="text-zinc-300 text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

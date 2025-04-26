@@ -244,8 +244,7 @@ export default function Home() {
             className="text-xl md:text-2xl text-gray-300 max-w-3xl mb-12 leading-relaxed"
           >
             <div className="text-4xl mx-auto font-normal text-neutral-600 dark:text-neutral-400">
-              Manage your finances&nbsp;
-              <FlipWords words={words} /> <br />
+              Manage your finances<FlipWords words={words} /> <br />
               with Credence.
             </div>
           </motion.p>
@@ -262,7 +261,9 @@ export default function Home() {
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 text-white font-medium flex items-center justify-center gap-3 shadow-lg shadow-orange-500/30 text-lg"
             >
-              Get Started <ArrowRight size={20} />
+              <Link href="/dashboard" className="flex items-center gap-3">
+                Get Started <ArrowRight size={20} />
+              </Link>
             </motion.button>
 
             <motion.button
@@ -270,7 +271,9 @@ export default function Home() {
               whileTap={{ scale: 0.98 }}
               className="px-10 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white font-medium text-lg hover:bg-white/15 transition-colors"
             >
-              See Demo
+              <Link href="/summary" className="flex items-center gap-3">
+                See Demo
+              </Link>
             </motion.button>
           </motion.div>
         </motion.section>

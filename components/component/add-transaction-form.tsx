@@ -80,18 +80,23 @@ export function AddTransactionForm({
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Add Transaction</CardTitle>
-        <CardDescription className="text-zinc-400">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/60 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-4">
+        <div className="flex items-center space-x-2">
+          <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+            Add Transaction
+          </CardTitle>
+        </div>
+        <CardDescription className="text-zinc-400 ml-3 mt-1">
           Record a new transaction to track your finances
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label htmlFor="type">Type</Label>
+              <Label htmlFor="type" className="text-zinc-300 font-medium">Type</Label>
               <Select
                 value={formData.type}
                 onValueChange={(value) =>
@@ -100,18 +105,18 @@ export function AddTransactionForm({
               >
                 <SelectTrigger
                   id="type"
-                  className="bg-zinc-800/50 border-zinc-700"
+                  className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                 >
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="income">Income</SelectItem>
-                  <SelectItem value="expense">Expense</SelectItem>
+                <SelectContent className="bg-zinc-900 border-zinc-800">
+                  <SelectItem value="income" className="hover:bg-zinc-800">Income</SelectItem>
+                  <SelectItem value="expense" className="hover:bg-zinc-800">Expense</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
+              <Label htmlFor="amount" className="text-zinc-300 font-medium">Amount</Label>
               <Input
                 id="amount"
                 type="number"
@@ -120,12 +125,12 @@ export function AddTransactionForm({
                 onChange={(e) =>
                   setFormData({ ...formData, amount: e.target.value })
                 }
-                className="bg-zinc-800/50 border-zinc-700"
+                className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category" className="text-zinc-300 font-medium">Category</Label>
             <Select
               value={formData.category}
               onValueChange={(value) =>
@@ -134,23 +139,23 @@ export function AddTransactionForm({
             >
               <SelectTrigger
                 id="category"
-                className="bg-zinc-800/50 border-zinc-700"
+                className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
               >
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="food">Food & Dining</SelectItem>
-                <SelectItem value="shopping">Shopping</SelectItem>
-                <SelectItem value="housing">Housing</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="income">Income</SelectItem>
+              <SelectContent className="bg-zinc-900 border-zinc-800">
+                <SelectItem value="food" className="hover:bg-zinc-800">Food & Dining</SelectItem>
+                <SelectItem value="shopping" className="hover:bg-zinc-800">Shopping</SelectItem>
+                <SelectItem value="housing" className="hover:bg-zinc-800">Housing</SelectItem>
+                <SelectItem value="transportation" className="hover:bg-zinc-800">Transportation</SelectItem>
+                <SelectItem value="entertainment" className="hover:bg-zinc-800">Entertainment</SelectItem>
+                <SelectItem value="utilities" className="hover:bg-zinc-800">Utilities</SelectItem>
+                <SelectItem value="income" className="hover:bg-zinc-800">Income</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-zinc-300 font-medium">Description</Label>
             <Input
               id="description"
               placeholder="Transaction description"
@@ -158,16 +163,16 @@ export function AddTransactionForm({
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              className="bg-zinc-800/50 border-zinc-700"
+              className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
             />
           </div>
           <Button
             type="submit"
-            className="w-full orange-gradient orange-glow transition-shadow flex items-center gap-2"
+            className="w-full bg-gradient-to-r from-orange-400 via-orange-500 to-pink-600 hover:from-orange-400 hover:via-orange-500 hover:to-pink-500 text-white font-medium py-2 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 mt-4"
             disabled={isLoading}
           >
-            <PlusIcon className="h-4 w-4" />
-            Add Transaction
+            <PlusIcon className="h-5 w-5" />
+            {isLoading ? "Processing..." : "Add Transaction"}
           </Button>
         </form>
       </CardContent>

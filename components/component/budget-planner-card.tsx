@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState, useEffect } from "react";
-import { PlusIcon, SaveIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, SaveIcon, TrashIcon, BarChart3Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -179,16 +179,32 @@ export function BudgetPlannerCard() {
 
   if (isLoading) {
     return (
-      <Card className="glassmorphism rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Budget Planner</CardTitle>
-          <CardDescription className="text-zinc-400">
+      <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+        <CardHeader className="pb-4">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+              Budget Planner
+            </CardTitle>
+          </div>
+          <CardDescription className="text-zinc-400 ml-10 mt-1">
             Loading budget data...
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-[200px]">
-            <p className="text-zinc-400">Loading...</p>
+            <div className="animate-pulse space-y-6 w-full">
+              <div className="h-10 bg-zinc-800/50 rounded-md w-3/4 mx-auto"></div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="h-12 bg-zinc-800/50 rounded-md"></div>
+                <div className="h-12 bg-zinc-800/50 rounded-md"></div>
+              </div>
+              <div className="space-y-4">
+                <div className="h-12 bg-zinc-800/50 rounded-md"></div>
+                <div className="h-12 bg-zinc-800/50 rounded-md"></div>
+                <div className="h-12 bg-zinc-800/50 rounded-md"></div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -197,32 +213,39 @@ export function BudgetPlannerCard() {
 
   if (budgetExists) {
     return (
-      <Card className="glassmorphism rounded-2xl">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Budget Planner</CardTitle>
-          <CardDescription className="text-zinc-400">
+      <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+        <CardHeader className="pb-4">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+              Budget Planner
+            </CardTitle>
+          </div>
+          <CardDescription className="text-zinc-400 ml-3 mt-1">
             Budget for{" "}
-            {new Date(0, parseInt(month) - 1).toLocaleString("default", {
-              month: "long",
-            })}{" "}
-            {year}
+            <span className="text-orange-400">
+              {new Date(0, parseInt(month) - 1).toLocaleString("default", {
+                month: "long",
+              })}{" "}
+              {year}
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="month">Month</Label>
+                <Label htmlFor="month" className="text-zinc-300 font-medium">Month</Label>
                 <Select value={month} onValueChange={setMonth}>
                   <SelectTrigger
                     id="month"
-                    className="bg-zinc-800/50 border-zinc-700"
+                    className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                   >
                     <SelectValue placeholder="Select month" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-zinc-900 border-zinc-800">
                     {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                      <SelectItem key={m} value={m.toString()}>
+                      <SelectItem key={m} value={m.toString()} className="hover:bg-zinc-800">
                         {new Date(0, m - 1).toLocaleString("default", {
                           month: "long",
                         })}
@@ -232,20 +255,20 @@ export function BudgetPlannerCard() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="year">Year</Label>
+                <Label htmlFor="year" className="text-zinc-300 font-medium">Year</Label>
                 <Select value={year} onValueChange={setYear}>
                   <SelectTrigger
                     id="year"
-                    className="bg-zinc-800/50 border-zinc-700"
+                    className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                   >
                     <SelectValue placeholder="Select year" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-zinc-900 border-zinc-800">
                     {Array.from(
                       { length: 5 },
                       (_, i) => currentYear - 2 + i
                     ).map((y) => (
-                      <SelectItem key={y} value={y.toString()}>
+                      <SelectItem key={y} value={y.toString()} className="hover:bg-zinc-800">
                         {y}
                       </SelectItem>
                     ))}
@@ -254,24 +277,29 @@ export function BudgetPlannerCard() {
               </div>
             </div>
             <div className="space-y-4">
-              <div className="p-4 bg-zinc-800/30 rounded-lg">
-                <p className="text-zinc-300 font-medium">
-                  Total Budget: ₹{totalBudget}
-                </p>
-                <div className="mt-4 space-y-2">
+              <div className="p-6 bg-gradient-to-br from-zinc-800/40 to-zinc-900/60 backdrop-blur-sm rounded-xl border border-zinc-700/30">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="bg-orange-500/20 p-2 rounded-full">
+                    <BarChart3Icon className="h-5 w-5 text-orange-500" />
+                  </div>
+                  <p className="text-lg font-medium text-orange-400">
+                    Total Budget: ₹{totalBudget}
+                  </p>
+                </div>
+                <div className="mt-4 space-y-3">
                   {categoryAllocations.map((allocation, index) => (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span className="text-zinc-400">
+                    <div key={index} className="flex justify-between items-center py-2 border-b border-zinc-800/50 last:border-0">
+                      <span className="text-zinc-300 font-medium">
                         {allocation.category}
                       </span>
-                      <span className="text-zinc-300">
+                      <span className="text-zinc-100 font-semibold bg-zinc-800/70 py-1 px-3 rounded-md">
                         ₹{allocation.amount}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
-              <p className="text-center text-zinc-400">
+              <p className="text-center text-zinc-400 bg-zinc-800/30 py-3 px-4 rounded-lg border border-zinc-800/50 mt-4">
                 Select a different month to create a new budget
               </p>
             </div>
@@ -282,28 +310,33 @@ export function BudgetPlannerCard() {
   }
 
   return (
-    <Card className="glassmorphism rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Budget Planner</CardTitle>
-        <CardDescription className="text-zinc-400">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-4">
+        <div className="flex items-center space-x-2">
+          <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+            Budget Planner
+          </CardTitle>
+        </div>
+        <CardDescription className="text-zinc-400 ml-10 mt-1">
           Set your monthly budget and category allocations
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="month">Month</Label>
+              <Label htmlFor="month" className="text-zinc-300 font-medium">Month</Label>
               <Select value={month} onValueChange={setMonth}>
                 <SelectTrigger
                   id="month"
-                  className="bg-zinc-800/50 border-zinc-700"
+                  className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                 >
                   <SelectValue placeholder="Select month" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-zinc-900 border-zinc-800">
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                    <SelectItem key={m} value={m.toString()}>
+                    <SelectItem key={m} value={m.toString()} className="hover:bg-zinc-800">
                       {new Date(0, m - 1).toLocaleString("default", {
                         month: "long",
                       })}
@@ -313,18 +346,18 @@ export function BudgetPlannerCard() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="year">Year</Label>
+              <Label htmlFor="year" className="text-zinc-300 font-medium">Year</Label>
               <Select value={year} onValueChange={setYear}>
                 <SelectTrigger
                   id="year"
-                  className="bg-zinc-800/50 border-zinc-700"
+                  className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                 >
                   <SelectValue placeholder="Select year" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-zinc-900 border-zinc-800">
                   {Array.from({ length: 5 }, (_, i) => currentYear - 2 + i).map(
                     (y) => (
-                      <SelectItem key={y} value={y.toString()}>
+                      <SelectItem key={y} value={y.toString()} className="hover:bg-zinc-800">
                         {y}
                       </SelectItem>
                     )
@@ -335,47 +368,47 @@ export function BudgetPlannerCard() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="totalBudget">Total Budget</Label>
+            <Label htmlFor="totalBudget" className="text-zinc-300 font-medium">Total Budget</Label>
             <Input
               id="totalBudget"
               type="number"
               placeholder="₹0.00"
               value={totalBudget}
               onChange={(e) => setTotalBudget(e.target.value)}
-              className="bg-zinc-800/50 border-zinc-700"
+              className="bg-zinc-800/30 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3 pt-2">
             <div className="flex justify-between items-center">
-              <Label>Category Allocations</Label>
+              <Label className="text-zinc-300 font-medium">Category Allocations</Label>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
                 onClick={addCategoryRow}
-                className="h-8 px-2 text-orange-400 hover:text-orange-300 hover:bg-zinc-800"
+                className="h-8 px-3 text-orange-400 hover:text-orange-300 hover:bg-zinc-800/70 transition-colors flex items-center"
               >
                 <PlusIcon className="h-4 w-4 mr-1" />
                 Add Category
               </Button>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3 bg-zinc-800/20 p-4 rounded-lg border border-zinc-800/50">
               {categoryAllocations.map((allocation, index) => (
-                <div key={index} className="flex gap-2 items-center">
+                <div key={index} className="flex gap-3 items-center">
                   <Select
                     value={allocation.category}
                     onValueChange={(value) =>
                       updateCategoryAllocation(index, "category", value)
                     }
                   >
-                    <SelectTrigger className="flex-1 bg-zinc-800/50 border-zinc-700">
+                    <SelectTrigger className="flex-1 bg-zinc-800/50 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-zinc-900 border-zinc-800">
                       {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
+                        <SelectItem key={category} value={category} className="hover:bg-zinc-800">
                           {category}
                         </SelectItem>
                       ))}
@@ -388,14 +421,14 @@ export function BudgetPlannerCard() {
                     onChange={(e) =>
                       updateCategoryAllocation(index, "amount", e.target.value)
                     }
-                    className="w-24 bg-zinc-800/50 border-zinc-700"
+                    className="w-28 bg-zinc-800/50 border-zinc-700/50 backdrop-blur-sm focus:ring-orange-500/40 focus:border-orange-500/60 transition-all"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
                     onClick={() => removeCategoryRow(index)}
-                    className="h-8 w-8 text-red-500 hover:text-red-400 hover:bg-zinc-800"
+                    className="h-8 w-8 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors"
                     disabled={categoryAllocations.length <= 1}
                   >
                     <TrashIcon className="h-4 w-4" />
@@ -408,10 +441,10 @@ export function BudgetPlannerCard() {
 
           <Button
             type="submit"
-            className="w-full orange-gradient orange-glow transition-shadow flex items-center gap-2"
+            className="w-full bg-gradient-to-r from-orange-400 via-orange-500 to-pink-600 hover:from-orange-400 hover:via-orange-500 hover:to-pink-500 text-white font-medium py-2 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-2 mt-6"
             disabled={isLoading}
           >
-            <SaveIcon className="h-4 w-4" />
+            <SaveIcon className="h-5 w-5" />
             {isLoading ? "Saving..." : "Save Budget"}
           </Button>
         </form>

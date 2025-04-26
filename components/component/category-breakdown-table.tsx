@@ -199,10 +199,15 @@ export function CategoryBreakdownTable() {
   };
 
   return (
-    <Card className="glassmorphism rounded-2xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Category Breakdown</CardTitle>
-        <CardDescription className="text-zinc-400">
+    <Card className="rounded-2xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/90 border-zinc-800/50 shadow-xl hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <div className="flex items-center space-x-2">
+          <div className="h-8 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-full" />
+          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+            Category Breakdown
+          </CardTitle>
+        </div>
+        <CardDescription className="text-zinc-400 ml-3">
           {monthName} {breakdownData.year} - Budget Overview
           {budgetData.unallocated > 0 && (
             <span className="ml-2 text-yellow-500">
@@ -212,75 +217,77 @@ export function CategoryBreakdownTable() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader className="bg-zinc-800/50">
-            <TableRow>
-              <TableHead className="text-zinc-300">Category</TableHead>
-              <TableHead className="text-zinc-300">Budget</TableHead>
-              <TableHead className="text-zinc-300">Spent</TableHead>
-              <TableHead className="text-zinc-300">Remaining</TableHead>
-              <TableHead className="text-zinc-300">Progress</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {combinedData.map((item) => (
-              <TableRow key={item.category}>
-                <TableCell className="font-medium">{item.category}</TableCell>
-                <TableCell>₹{item.budgeted.toFixed(2)}</TableCell>
-                <TableCell>₹{item.spent.toFixed(2)}</TableCell>
-                <TableCell className={item.remaining < 0 ? "text-red-500" : ""}>
-                  ₹{item.remaining.toFixed(2)}
+        <div className="rounded-lg border border-zinc-800 overflow-hidden">
+          <Table>
+            <TableHeader className="bg-zinc-800/50">
+              <TableRow>
+                <TableHead className="text-zinc-300">Category</TableHead>
+                <TableHead className="text-zinc-300">Budget</TableHead>
+                <TableHead className="text-zinc-300">Spent</TableHead>
+                <TableHead className="text-zinc-300">Remaining</TableHead>
+                <TableHead className="text-zinc-300">Progress</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {combinedData.map((item) => (
+                <TableRow key={item.category} className="bg-zinc-800/10">
+                  <TableCell className="font-medium">{item.category}</TableCell>
+                  <TableCell>₹{item.budgeted.toFixed(2)}</TableCell>
+                  <TableCell>₹{item.spent.toFixed(2)}</TableCell>
+                  <TableCell className={item.remaining < 0 ? "text-red-500" : ""}>
+                    ₹{item.remaining.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Progress
+                        value={item.budgeted > 0 ? item.percentageUsed : 0}
+                        className={cn(
+                          "h-2 w-full max-w-[100px]",
+                          item.status === "exceeded"
+                            ? "bg-red-500"
+                            : item.status === "warning"
+                            ? "bg-orange-500"
+                            : "orange-gradient"
+                        )}
+                      />
+                      <span className="text-xs text-zinc-400">
+                        {item.budgeted > 0
+                          ? `${item.percentageUsed.toFixed(1)}%`
+                          : "No budget"}
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow className="font-semibold">
+                <TableCell>Total</TableCell>
+                <TableCell>₹{totals.budgeted.toFixed(2)}</TableCell>
+                <TableCell>₹{totals.spent.toFixed(2)}</TableCell>
+                <TableCell className={totals.remaining < 0 ? "text-red-500" : ""}>
+                  ₹{totals.remaining.toFixed(2)}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Progress
-                      value={item.budgeted > 0 ? item.percentageUsed : 0}
+                      value={totals.percentageUsed}
                       className={cn(
                         "h-2 w-full max-w-[100px]",
-                        item.status === "exceeded"
+                        totals.percentageUsed >= 100
                           ? "bg-red-500"
-                          : item.status === "warning"
+                          : totals.percentageUsed >= 80
                           ? "bg-orange-500"
                           : "orange-gradient"
                       )}
                     />
                     <span className="text-xs text-zinc-400">
-                      {item.budgeted > 0
-                        ? `${item.percentageUsed.toFixed(1)}%`
-                        : "No budget"}
+                      {totals.percentageUsed.toFixed(1)}%
                     </span>
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
-            <TableRow className="font-semibold">
-              <TableCell>Total</TableCell>
-              <TableCell>₹{totals.budgeted.toFixed(2)}</TableCell>
-              <TableCell>₹{totals.spent.toFixed(2)}</TableCell>
-              <TableCell className={totals.remaining < 0 ? "text-red-500" : ""}>
-                ₹{totals.remaining.toFixed(2)}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <Progress
-                    value={totals.percentageUsed}
-                    className={cn(
-                      "h-2 w-full max-w-[100px]",
-                      totals.percentageUsed >= 100
-                        ? "bg-red-500"
-                        : totals.percentageUsed >= 80
-                        ? "bg-orange-500"
-                        : "orange-gradient"
-                    )}
-                  />
-                  <span className="text-xs text-zinc-400">
-                    {totals.percentageUsed.toFixed(1)}%
-                  </span>
-                </div>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );
