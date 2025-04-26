@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/config";
+import { cookies } from "next/headers";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 export async function POST(request: Request) {
   try {
@@ -20,24 +23,56 @@ export async function POST(request: Request) {
     // Add user information to the feedback data
     const enrichedFeedbackData = {
       ...feedbackData,
-      userId: session.user.id,
+      userId: new ObjectId(session.user.id),
       userEmail: session.user.email,
       userName: session.user.name,
-      submittedAt: new Date().toISOString(),
+      userImage: session.user.image,
+      submittedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
-    // Here you would typically save the feedback to your database
-    // For now, we'll just log it to the console
-    console.log("Received feedback:", enrichedFeedbackData);
+    // Connect to MongoDB and save the feedback
+    const client = await clientPromise;
+    const db = client.db("credence");
+    const feedbackCollection = db.collection("feedback");
 
-    return NextResponse.json(
+    await feedbackCollection.insertOne(enrichedFeedbackData);
+
+    // Create response with cookie
+    const response = NextResponse.json(
       { message: "Feedback submitted successfully" },
       { status: 200 }
     );
+
+    // Set cookie to mark feedback as submitted
+    response.cookies.set("feedback_submitted", "true", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 365 * 24 * 60 * 60, // 1 year
+    });
+
+    return response;
   } catch (error) {
     console.error("Error processing feedback:", error);
     return NextResponse.json(
       { error: "Failed to process feedback" },
+      { status: 500 }
+    );
+  }
+}
+
+// Add a GET endpoint to check if user has submitted feedback
+export async function GET() {
+  try {
+    const cookieStore = await cookies();
+    const hasFeedback = cookieStore.get("feedback_submitted")?.value === "true";
+    return NextResponse.json({ hasSubmitted: hasFeedback });
+  } catch (error) {
+    console.error("Error checking feedback status:", error);
+    return NextResponse.json(
+      { error: "Failed to check feedback status" },
       { status: 500 }
     );
   }

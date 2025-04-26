@@ -85,19 +85,6 @@ export default function FinancialAnalysisPage() {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "border-red-200 bg-red-50";
-      case "medium":
-        return "border-yellow-200 bg-yellow-50";
-      case "low":
-        return "border-green-200 bg-green-50";
-      default:
-        return "border-gray-200 bg-gray-50";
-    }
-  };
-
   return (
     <main className="min-h-screen overflow-x-hidden relative">
       {/* Grid overlay */}

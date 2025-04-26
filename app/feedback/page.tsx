@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,6 +25,7 @@ import {
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/navbar";
+import { SuccessModal } from "@/components/ui/success-modal";
 
 // Form schema
 const formSchema = z.object({
@@ -82,6 +84,26 @@ const StarRating = ({
 
 export default function FeedbackPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const router = useRouter();
+
+  // Check if user has already submitted feedback
+  useEffect(() => {
+    const checkFeedbackStatus = async () => {
+      try {
+        const response = await fetch("/api/feedback");
+        const data = await response.json();
+
+        if (data.hasSubmitted) {
+          router.replace("/");
+        }
+      } catch (error) {
+        console.error("Error checking feedback status:", error);
+      }
+    };
+
+    checkFeedbackStatus();
+  }, [router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -107,7 +129,6 @@ export default function FeedbackPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      console.log(values);
       const response = await fetch("/api/feedback", {
         method: "POST",
         headers: {
@@ -120,9 +141,8 @@ export default function FeedbackPage() {
         throw new Error("Failed to submit feedback");
       }
 
-      // Reset form and show success message
-      form.reset();
-      alert("Thank you for your feedback!");
+      // Show success modal
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error submitting feedback:", error);
       alert("Failed to submit feedback. Please try again.");
@@ -131,14 +151,19 @@ export default function FeedbackPage() {
     }
   }
 
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    router.replace("/");
+  };
+
   return (
     <main className="min-h-screen overflow-x-hidden relative">
-      {/* Grid overlay */}
-      <div className="fixed inset-0 -z-5 bg-[url('/grid.svg')] bg-center opacity-10" />
+      {/* Grid overlay - Moved behind content */}
+      <div className="fixed inset-0 -z-10 bg-[url('/grid.svg')] bg-center opacity-10 pointer-events-none" />
 
       <Navbar />
 
-      <div className="container mx-auto py-8 px-4">
+      <div className="container mx-auto px-4 py-8 pt-24">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -151,7 +176,7 @@ export default function FeedbackPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-3xl mx-auto"
+          className="max-w-3xl mx-auto relative z-10"
         >
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -294,7 +319,7 @@ export default function FeedbackPage() {
                   name="desiredImprovements"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Improvements you'd like to see</FormLabel>
+                      <FormLabel>Improvements you&apos;d like to see</FormLabel>
                       <div className="space-y-2">
                         {[
                           "Personalized budget advice",
@@ -646,6 +671,8 @@ export default function FeedbackPage() {
           </Form>
         </motion.div>
       </div>
+
+      <SuccessModal isOpen={showSuccessModal} onClose={handleModalClose} />
     </main>
   );
 }

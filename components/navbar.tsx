@@ -46,7 +46,7 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Features", href: "#features" },
+    { name: "Feedback", href: "/feedback" },
     { name: "Dashboard", href: "/dashboard" },
     { name: "Summary", href: "/summary" },
     { name: "FinAI", href: "/finai" },
