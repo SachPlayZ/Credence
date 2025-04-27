@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DateRangePicker } from "./date-range-picker"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DateRangePicker } from "./date-range-picker";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function DateRangeFilter() {
   return (
@@ -22,7 +28,10 @@ export function DateRangeFilter() {
               Category
             </Label>
             <Select defaultValue="all">
-              <SelectTrigger id="category" className="w-full bg-zinc-800/50 border-zinc-700">
+              <SelectTrigger
+                id="category"
+                className="w-full bg-zinc-800/50 border-zinc-700"
+              >
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
@@ -42,7 +51,10 @@ export function DateRangeFilter() {
               Type
             </Label>
             <Select defaultValue="all">
-              <SelectTrigger id="type" className="w-full bg-zinc-800/50 border-zinc-700">
+              <SelectTrigger
+                id="type"
+                className="w-full bg-zinc-800/50 border-zinc-700"
+              >
                 <SelectValue placeholder="All Types" />
               </SelectTrigger>
               <SelectContent>
@@ -52,9 +64,11 @@ export function DateRangeFilter() {
               </SelectContent>
             </Select>
           </div>
-          <Button className="bg-gradient-to-r from-orange-600 to-pink-600 transition-shadow">Apply Filters</Button>
+          <Button className="bg-gradient-to-r from-orange-600 to-pink-600 transition-shadow">
+            Apply Filters
+          </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,19 +1,23 @@
-"use client"
-import { motion } from "framer-motion"
+"use client";
+import { motion } from "framer-motion";
 
-import { StatsCards } from "@/components/component/stats-cards"
-import { ExpensePieChart } from "@/components/component/expense-pie-chart"
-import { MonthlyBarChart } from "@/components/component/monthly-bar-chart"
-import { BalanceTrendChart } from "@/components/component/balance-trend-chart"
-import { CategoryBreakdownTable } from "@/components/component/category-breakdown-table"
-import { DateRangeFilter } from "@/components/component/date-range-filter"
-import Navbar from "@/components/navbar"
+import { StatsCards } from "@/components/component/stats-cards";
+import { ExpensePieChart } from "@/components/component/expense-pie-chart";
+import { MonthlyBarChart } from "@/components/component/monthly-bar-chart";
+import { BalanceTrendChart } from "@/components/component/balance-trend-chart";
+import { CategoryBreakdownTable } from "@/components/component/category-breakdown-table";
+import { DateRangeFilter } from "@/components/component/date-range-filter";
+import Navbar from "@/components/navbar";
 
 export default function Summary() {
   return (
     <div className="space-y-6 py-12 px-10 mx-6 my-8">
-    <Navbar/>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+      <Navbar />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <DateRangeFilter />
       </motion.div>
 
@@ -51,5 +55,5 @@ export default function Summary() {
         <CategoryBreakdownTable />
       </motion.div>
     </div>
-  )
+  );
 }
