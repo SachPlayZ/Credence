@@ -5,9 +5,6 @@ import { motion } from "framer-motion";
 import {
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -23,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Navbar from "@/components/navbar";
-import Image from "next/image";
+import { Star, StarHalf } from "lucide-react";
 
 interface FeedbackAnalysis {
   totalResponses: number;
@@ -60,6 +57,44 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     );
   }
   return null;
+};
+
+const formatLabel = (label: string) => {
+  return label
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+const StarRating = ({ rating }: { rating: number }) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(
+      <Star
+        key={`full-${i}`}
+        className="w-6 h-6 fill-orange-400 text-orange-400"
+      />
+    );
+  }
+
+  if (hasHalfStar) {
+    stars.push(
+      <StarHalf
+        key="half"
+        className="w-6 h-6 fill-orange-400 text-orange-400"
+      />
+    );
+  }
+
+  const emptyStars = 5 - stars.length;
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(<Star key={`empty-${i}`} className="w-6 h-6 text-zinc-600" />);
+  }
+
+  return <div className="flex gap-1">{stars}</div>;
 };
 
 export default function FeedbackAnalysis() {
@@ -108,17 +143,43 @@ export default function FeedbackAnalysis() {
     );
   }
 
-  const featureData = Object.entries(data.featureUsage).map(([key, value]) => ({
-    name: key,
-    value,
-  }));
-
-  const improvementData = Object.entries(data.desiredImprovements).map(
-    ([key, value]) => ({
-      name: key,
-      value,
-    })
-  );
+  const questionData = [
+    {
+      title: "Usage Frequency",
+      data: Object.entries(data.usageFrequency).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Discovery Source",
+      data: Object.entries(data.discoverySource).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Prior Budgeting Skill",
+      data: Object.entries(data.priorBudgetingSkill).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Feature Usage",
+      data: Object.entries(data.featureUsage).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Desired Improvements",
+      data: Object.entries(data.desiredImprovements).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+  ];
 
   return (
     <div className="min-h-screen space-y-6 p-8">
@@ -152,83 +213,53 @@ export default function FeedbackAnalysis() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-2">
-                <p className="text-3xl font-bold text-orange-400">{value}</p>
-                <p className="text-sm text-zinc-400">/ 5</p>
+              <div className="flex flex-col items-center gap-2">
+                <StarRating rating={value} />
+                <p className="text-sm text-zinc-400">{value.toFixed(1)} / 5</p>
               </div>
             </CardContent>
           </Card>
         ))}
       </motion.div>
 
-      {/* Feature Usage and Improvements */}
+      {/* Question-wise Analysis */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Feature Usage Chart */}
-        <Card className="glassmorphism">
-          <CardHeader>
-            <CardTitle>Most Used Features</CardTitle>
-            <CardDescription>Feature usage distribution</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={featureData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} (${(percent * 100).toFixed(0)}%)`
-                  }
-                  outerRadius={150}
-                  fill="#8884d8"
-                  dataKey="value"
+        {questionData.map((question, index) => (
+          <Card key={index} className="glassmorphism">
+            <CardHeader>
+              <CardTitle>{question.title}</CardTitle>
+              <CardDescription>Response distribution</CardDescription>
+            </CardHeader>
+            <CardContent className="h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={question.data}
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
-                  {featureData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS.primary[index % COLORS.primary.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Desired Improvements Chart */}
-        <Card className="glassmorphism">
-          <CardHeader>
-            <CardTitle>Desired Improvements</CardTitle>
-            <CardDescription>Most requested features</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={improvementData}
-                layout="vertical"
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" />
-                <YAxis
-                  type="category"
-                  dataKey="name"
-                  width={150}
-                  tick={{ fill: "#a1a1aa" }}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="value" fill="#FF8042" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={150}
+                    tick={{ fill: "#a1a1aa" }}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar
+                    dataKey="value"
+                    fill={COLORS.primary[index % COLORS.primary.length]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        ))}
       </motion.div>
 
       {/* Member Feedback List */}
@@ -239,10 +270,8 @@ export default function FeedbackAnalysis() {
       >
         <Card className="glassmorphism">
           <CardHeader>
-            <CardTitle>Member Feedback</CardTitle>
-            <CardDescription>
-              Detailed feedback from all members
-            </CardDescription>
+            <CardTitle>Open-ended Feedback</CardTitle>
+            <CardDescription>Anonymous feedback from users</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
@@ -252,35 +281,9 @@ export default function FeedbackAnalysis() {
                   className="border-b border-zinc-800 last:border-0 pb-8 last:pb-0"
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    {/* User Profile Section */}
-                    <div className="flex-shrink-0">
-                      <Image
-                        src={feedback.userImage || "/default-avatar.png"}
-                        alt={feedback.userName}
-                        width={48}
-                        height={48}
-                        className="rounded-full"
-                      />
-                    </div>
-
-                    {/* User Info and Feedback Content */}
+                    {/* Feedback Content */}
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-medium text-zinc-200">
-                            {feedback.userName || "Anonymous"}
-                          </h3>
-                          <p className="text-sm text-zinc-400">
-                            {new Date(feedback.submittedAt).toLocaleDateString(
-                              undefined,
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              }
-                            )}
-                          </p>
-                        </div>
                         <div className="flex flex-wrap gap-2">
                           {feedback.mostUsedFeatures?.map((feature: string) => (
                             <Badge

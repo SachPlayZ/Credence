@@ -1,0 +1,68 @@
+FEEDBACK QUESTIONNAIRE
+
+RATING QUESTIONS (1-5 stars)
+1. Ease of logging expenses
+2. Effectiveness at helping stay within budget
+3. Satisfaction with reminders/alerts
+4. Likelihood of recommending the app
+
+MULTIPLE CHOICE QUESTIONS
+
+Features you use most often (Select all that apply):
+- Expense Logging
+- Budget Setting
+- Spending Alerts
+- Financial Reports
+- Goal Tracking
+
+Improvements you'd like to see (Select all that apply):
+- Personalized budget advice
+- Better visual analytics
+- Bank account integration
+- Dark mode
+- Other
+
+Motivation for using the app (Select all that apply):
+- Save for goals
+- Avoid debt
+- Build habits
+- Track spending awareness
+- Other
+
+Most helpful notifications (Select all that apply):
+- Daily spending summary
+- Budget limit warnings
+- Weekly financial health check
+- Custom savings tips
+
+SINGLE CHOICE QUESTIONS
+
+Usage frequency:
+- Multiple times a day
+- Once a day
+- Few times a week
+- Rarely
+
+How you heard about the app:
+- Friend/Family
+- Social Media
+- App Store Search
+- Online Articles
+
+Budgeting skill level before using the app:
+- Beginner
+- Intermediate
+- Advanced
+
+Preferred budget type:
+- Monthly budgets
+- Weekly budgets
+- Custom period budgets
+
+OPEN-ENDED QUESTIONS
+
+1. What is your favorite feature and why?
+
+2. What did you find difficult or confusing?
+
+3. Do you have any suggestions for improvements? 
