@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { usePDF } from "react-to-pdf";
 import {
   BarChart,
   Bar,
@@ -19,6 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import Navbar from "@/components/navbar";
 import { Star, StarHalf } from "lucide-react";
 
@@ -39,6 +42,14 @@ interface FeedbackAnalysis {
     difficultAspect: string;
     suggestions: string;
     mostUsedFeatures: string[];
+  }>;
+}
+
+interface QuestionData {
+  title: string;
+  data: Array<{
+    name: string;
+    value: number;
   }>;
 }
 
@@ -97,10 +108,186 @@ const StarRating = ({ rating }: { rating: number }) => {
   return <div className="flex gap-1">{stars}</div>;
 };
 
+const PDFContent = ({ data }: { data: FeedbackAnalysis }) => {
+  const questionData: QuestionData[] = [
+    {
+      title: "Usage Frequency",
+      data: Object.entries(data.usageFrequency).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Discovery Source",
+      data: Object.entries(data.discoverySource).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Prior Budgeting Skill",
+      data: Object.entries(data.priorBudgetingSkill).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Feature Usage",
+      data: Object.entries(data.featureUsage).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+    {
+      title: "Desired Improvements",
+      data: Object.entries(data.desiredImprovements).map(([key, value]) => ({
+        name: formatLabel(key),
+        value,
+      })),
+    },
+  ];
+
+  // Filter out feedback with no responses
+  const filteredFeedback = data.memberFeedback.filter(
+    (feedback) =>
+      feedback.favoriteFeature ||
+      feedback.difficultAspect ||
+      feedback.suggestions
+  );
+
+  return (
+    <div className="p-8 bg-white text-black">
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Feedback Analysis Report
+      </h1>
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Overall Ratings</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {Object.entries(data.ratingAverages).map(([key, value]) => (
+            <div key={key} className="border p-4 rounded">
+              <h3 className="font-medium mb-2">
+                {key
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
+              </h3>
+              <div className="flex items-center gap-2">
+                <StarRating rating={value} />
+                <span className="text-sm">{value.toFixed(1)} / 5</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4">Response Analysis</h2>
+        <div className="space-y-8">
+          {questionData.map((question, index) => (
+            <div
+              key={index}
+              className="border p-4 rounded"
+              style={{
+                pageBreakInside: "avoid",
+                marginBottom:
+                  question.title === "Discovery Source" ? "112px" : "0",
+              }}
+            >
+              <h3 className="font-medium mb-4">{question.title}</h3>
+              <div className="h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={question.data}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                    <XAxis type="number" />
+                    <YAxis type="category" dataKey="name" width={150} />
+                    <Bar
+                      dataKey="value"
+                      fill={COLORS.primary[index % COLORS.primary.length]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Open-ended Feedback</h2>
+        <div className="space-y-6">
+          {filteredFeedback.map((feedback, index) => (
+            <div
+              key={index}
+              className="border p-4 rounded"
+              style={{
+                pageBreakInside: "avoid",
+                breakInside: "avoid",
+                marginBottom: "24px",
+              }}
+            >
+              <div className="flex flex-wrap gap-2 mb-4">
+                {feedback.mostUsedFeatures?.map((feature: string) => (
+                  <span
+                    key={feature}
+                    className="bg-gray-100 px-2 py-1 rounded text-sm"
+                  >
+                    {feature}
+                  </span>
+                ))}
+              </div>
+
+              <div className="space-y-4">
+                {feedback.favoriteFeature && (
+                  <div style={{ pageBreakInside: "avoid" }}>
+                    <h4 className="font-medium mb-1">Favorite Feature</h4>
+                    <p className="text-gray-700">{feedback.favoriteFeature}</p>
+                  </div>
+                )}
+
+                {feedback.difficultAspect && (
+                  <div style={{ pageBreakInside: "avoid" }}>
+                    <h4 className="font-medium mb-1">Difficult Aspects</h4>
+                    <p className="text-gray-700">{feedback.difficultAspect}</p>
+                  </div>
+                )}
+
+                {feedback.suggestions && (
+                  <div style={{ pageBreakInside: "avoid" }}>
+                    <h4 className="font-medium mb-1">Suggestions</h4>
+                    <p className="text-gray-700">{feedback.suggestions}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function FeedbackAnalysis() {
   const [data, setData] = useState<FeedbackAnalysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toPDF, targetRef } = usePDF({
+    filename: "feedback-analysis.pdf",
+    page: {
+      format: "a4",
+      orientation: "portrait",
+      margin: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20,
+      },
+    },
+    method: "save",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,7 +330,7 @@ export default function FeedbackAnalysis() {
     );
   }
 
-  const questionData = [
+  const questionData: QuestionData[] = [
     {
       title: "Usage Frequency",
       data: Object.entries(data.usageFrequency).map(([key, value]) => ({
@@ -185,7 +372,24 @@ export default function FeedbackAnalysis() {
     <div className="min-h-screen space-y-6 p-8">
       <Navbar />
 
-      {/* Header Stats */}
+      <div className="flex justify-end mb-4">
+        <Button
+          onClick={() => toPDF()}
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+        >
+          <Download className="w-4 h-4 mr-2" />
+          Export PDF
+        </Button>
+      </div>
+
+      <div
+        ref={targetRef}
+        className="fixed left-[-9999px] top-0 w-[210mm] bg-white"
+        style={{ minHeight: "297mm" }}
+      >
+        {data && <PDFContent data={data} />}
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -203,26 +407,28 @@ export default function FeedbackAnalysis() {
           </CardContent>
         </Card>
 
-        {Object.entries(data.ratingAverages).map(([key, value]) => (
-          <Card key={key} className="glassmorphism">
-            <CardHeader>
-              <CardTitle className="text-lg">
-                {key
-                  .replace(/([A-Z])/g, " $1")
-                  .replace(/^./, (str) => str.toUpperCase())}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center gap-2">
-                <StarRating rating={value} />
-                <p className="text-sm text-zinc-400">{value.toFixed(1)} / 5</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        {data &&
+          Object.entries(data.ratingAverages).map(([key, value]) => (
+            <Card key={key} className="glassmorphism">
+              <CardHeader>
+                <CardTitle className="text-lg">
+                  {key
+                    .replace(/([A-Z])/g, " $1")
+                    .replace(/^./, (str) => str.toUpperCase())}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center gap-2">
+                  <StarRating rating={value} />
+                  <p className="text-sm text-zinc-400">
+                    {value.toFixed(1)} / 5
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
       </motion.div>
 
-      {/* Question-wise Analysis */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -262,7 +468,6 @@ export default function FeedbackAnalysis() {
         ))}
       </motion.div>
 
-      {/* Member Feedback List */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -275,61 +480,74 @@ export default function FeedbackAnalysis() {
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
-              {data.memberFeedback.map((feedback, index) => (
-                <div
-                  key={index}
-                  className="border-b border-zinc-800 last:border-0 pb-8 last:pb-0"
-                >
-                  <div className="flex items-start gap-4 mb-4">
-                    {/* Feedback Content */}
-                    <div className="flex-grow">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex flex-wrap gap-2">
-                          {feedback.mostUsedFeatures?.map((feature: string) => (
-                            <Badge
-                              key={feature}
-                              variant="secondary"
-                              className="bg-orange-400/10 text-orange-400"
-                            >
-                              {feature}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Feedback Content */}
-                      <div className="space-y-4 mt-4">
-                        <div>
-                          <h4 className="text-sm font-medium text-zinc-300 mb-1">
-                            Favorite Feature
-                          </h4>
-                          <p className="text-zinc-400">
-                            {feedback.favoriteFeature || "No response"}
-                          </p>
+              {data?.memberFeedback
+                .filter(
+                  (feedback) =>
+                    feedback.favoriteFeature ||
+                    feedback.difficultAspect ||
+                    feedback.suggestions
+                )
+                .map((feedback, index) => (
+                  <div
+                    key={index}
+                    className="border-b border-zinc-800 last:border-0 pb-8 last:pb-0"
+                  >
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="flex flex-wrap gap-2">
+                            {feedback.mostUsedFeatures?.map(
+                              (feature: string) => (
+                                <Badge
+                                  key={feature}
+                                  variant="secondary"
+                                  className="bg-orange-400/10 text-orange-400"
+                                >
+                                  {feature}
+                                </Badge>
+                              )
+                            )}
+                          </div>
                         </div>
 
-                        <div>
-                          <h4 className="text-sm font-medium text-zinc-300 mb-1">
-                            Difficult Aspects
-                          </h4>
-                          <p className="text-zinc-400">
-                            {feedback.difficultAspect || "No response"}
-                          </p>
-                        </div>
+                        <div className="space-y-4 mt-4">
+                          {feedback.favoriteFeature && (
+                            <div>
+                              <h4 className="text-sm font-medium text-zinc-300 mb-1">
+                                Favorite Feature
+                              </h4>
+                              <p className="text-zinc-400">
+                                {feedback.favoriteFeature}
+                              </p>
+                            </div>
+                          )}
 
-                        <div>
-                          <h4 className="text-sm font-medium text-zinc-300 mb-1">
-                            Suggestions
-                          </h4>
-                          <p className="text-zinc-400">
-                            {feedback.suggestions || "No response"}
-                          </p>
+                          {feedback.difficultAspect && (
+                            <div>
+                              <h4 className="text-sm font-medium text-zinc-300 mb-1">
+                                Difficult Aspects
+                              </h4>
+                              <p className="text-zinc-400">
+                                {feedback.difficultAspect}
+                              </p>
+                            </div>
+                          )}
+
+                          {feedback.suggestions && (
+                            <div>
+                              <h4 className="text-sm font-medium text-zinc-300 mb-1">
+                                Suggestions
+                              </h4>
+                              <p className="text-zinc-400">
+                                {feedback.suggestions}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </CardContent>
         </Card>
